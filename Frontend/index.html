@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/jpg" href="assets/favicon.ico" />
+    <meta charset="UTF-8">
+    <title>Flake Database</title>
+</head>
+
+<body>
+    <nav class="navbar sticky-top navbar-dark bg-primary">
+        <span class="navbar-brand">Flake Database</span>
+    </nav>
+    <br>
+    <div class="container">
+        <div class="jumbotron p-3">
+            <h2>
+                Manage
+                <b>Flakes</b>
+                <button type="button" data-target="#filtermodal" data-toggle="modal"
+                    class="btn btn-primary float-right"> <i class="bi bi-filter"> </i>Filter</i></button>
+            </h2>
+            <table class="table table-hover table-bordered table-sm" id="flake_table">
+                <thead>
+                    <tr id="table_header">
+                        <th style="width: 10%;">ID</th>
+                        <th>Material</th>
+                        <th style="width: 5%;">Thickness</th>
+                        <th>Size</th>
+                        <th style="width: 5%;">Used</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Material</th>
+                        <th>Thickness</th>
+                        <th>Size</th>
+                        <th>Used</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" class="ts-pager">
+                            <div class="form-inline">
+                                <div class="btn-group btn-group-sm mx-1" role="group">
+                                    <button type="button" class="btn btn-secondary first" title="first">⇤</button>
+                                    <button type="button" class="btn btn-secondary prev" title="previous">←</button>
+                                </div>
+                                <span class="pagedisplay"></span>
+                                <div class="btn-group btn-group-sm mx-1" role="group">
+                                    <button type="button" class="btn btn-secondary next" title="next">→</button>
+                                    <button type="button" class="btn btn-secondary last" title="last">⇥</button>
+                                </div>
+                                <select class="form-control-sm px-1 pagesize" title="Select page size">
+                                    <option value="10">10</option>
+                                    <option selected value="15">15</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="all">All Rows</option>
+                                </select>
+                                <select class="form-control-sm px-4 mx-1 pagenum" title="Select page number"
+                                    value="1"></select>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody>
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <!-- Filter Modal -->
+    <div id="filtermodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Flake Filter</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- user Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">User</span>
+                        </div>
+                        <input type="text" class="form-control" id="userInput" placeholder="Jan" aria-label="user"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <!-- size Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Min Size</span>
+                        </div>
+                        <input type="number" class="form-control" id="sizeInput" placeholder="0" aria-label="minSize"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">μm²</span>
+                        </div>
+                    </div>
+                    <!-- num_flakes Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Shown Flakes</span>
+                        </div>
+                        <input type="text" id="flakeLimit" class="form-control" placeholder="100" aria-label="numFlakes"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <!-- Material Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="materialSelect">Material</label>
+                        </div>
+                        <select class="custom-select" id="materialSelect">
+                            <option selected value="-1">Any</option>
+                            <option>WSe2</option>
+                            <option>WS2</option>
+                            <option>WTe2</option>
+                            <option>Graphene</option>
+                            <option>hBN</option>
+                        </select>
+                    </div>
+                    <!-- Layer Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="thicknessSelect">Thickness</label>
+                        </div>
+                        <select class="custom-select" id="thicknessSelect">
+                            <option selected value="-1">Any</option>
+                            <option value="1">Monolayer</option>
+                            <option value="2">Fewlayer</option>
+                            <option value="3">Thick</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="filter_button" type="button" class="btn btn-primary" data-dismiss="modal">Apply
+                        Filter</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Filter Modal -->
+
+</body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+<script src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
+<script type="module" src="./index.js"></script>
+
+</html>
