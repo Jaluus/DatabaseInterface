@@ -24,3 +24,14 @@
 
 ### Frontend
 1. If you have a browser, any browser, you are good
+
+### Etc
+
+you need to create a Config file called `database.ini` which looks something like this
+
+        [mysql]
+        host = localhost
+        database = full_flake
+        user = username
+        password = password
+        port = 3306

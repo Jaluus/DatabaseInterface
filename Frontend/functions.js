@@ -107,4 +107,27 @@ function createModal(data_dict) {
 
 }
 
-export { createModal, createTabelRow }
+function getDataFromServerAndDisplay(backend_url, filter) {
+    // Clear the Table first
+    $("#flake_table > tbody").empty();
+
+    // build the Query URL from the given Filter
+    let query_url = backend_url + "?" + $.param(filter);
+
+    console.log(query_url)
+
+    // repopulate the table with data
+    $.getJSON(query_url, function (data) {
+        $.each(data, function (key, value) {
+            var row = createTabelRow(value);
+            var view_modal = createModal(value);
+
+            // Append to to the table
+            $("#flake_table > tbody").append(row);
+            $("#flake_table").append(view_modal);
+        });
+        $("#flake_table").trigger("update");
+    });
+}
+
+export { createModal, createTabelRow, getDataFromServerAndDisplay }

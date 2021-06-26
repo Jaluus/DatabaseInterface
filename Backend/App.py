@@ -5,8 +5,8 @@ from dbConnection import dbConnectionQuery
 app = Flask(__name__)
 
 # # You need cors!!
-# cors = CORS(app)
-# app.config["CORS_HEADERS"] = "Content-Type"
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 
 db = dbConnectionQuery()
 
@@ -23,7 +23,6 @@ def data_GET():
     # here we want to get the value of user (i.e. ?user=some-value)
     query_params = request.args
     print(query_params)
-    print("get got")
     flake_dict = db.get_flakes(**query_params)
     return jsonify(flake_dict)
 

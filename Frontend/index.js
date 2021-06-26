@@ -1,74 +1,25 @@
-import { createModal, createTabelRow } from "./functions.js";
+import { createModal, createTabelRow, getDataFromServerAndDisplay } from "./functions.js";
 
 var backend_URL = "http://192.168.0.220:5000/flakes";
+var currentFilter = {};
 
-function buildURL(backend_URL, filter) {
-  let full_URL = backend_URL;
-  let first_value = true;
-  for (const [key, value] of Object.entries(filter)) {
-    if (value != "-1") {
-      if (first_value) {
-        full_URL += "?";
-        first_value = false;
-      } else {
-        full_URL += "&";
-      }
-      full_URL += `${key}=${value}`;
-    }
-  }
-
-  return full_URL;
-}
-
-function getDataFromServerAndDisplay(filter) {
-  // Clear the Table first
-  $("#flake_table > tbody").empty();
-
-  let full_URL = buildURL(backend_URL, filter);
-
-  // repopulate the table with data
-  $.getJSON(full_URL, function (data) {
-    $.each(data, function (key, value) {
-      var row = createTabelRow(value);
-      var view_modal = createModal(value);
-
-      // Append to to the table
-      $("#flake_table > tbody").append(row);
-      $("#flake_table").append(view_modal);
-    });
-    $("#flake_table").trigger("update");
-  });
-}
 //add a click listener to the filter button of the filter Modal
 $("#filter_button").click(function (event) {
-  var currentFilter = {};
+  currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
   currentFilter.userName =
-    $("#userInput").val() != "" ? $("#userInput").val() : "-1";
+    $("#userInput").val() != "" ? $("#userInput").val() : undefined;
   currentFilter.minSize =
-    $("#sizeInput").val() != "" ? $("#sizeInput").val() : "-1";
+    $("#sizeInput").val() != "" ? $("#sizeInput").val() : undefined;
   currentFilter.thickness =
-    $("#thicknessSelect").val() != "" ? $("#thicknessSelect").val() : "-1";
-  currentFilter.material =
-    $("#materialSelect").val() != "" ? $("#materialSelect").val() : "-1";
+    $("#thicknessSelect").val() != "" ? $("#thicknessSelect").val() : undefined;
+  currentFilter.exfoliated_material =
+    $("#materialSelect").val() != "" ? $("#materialSelect").val() : undefined;
   currentFilter.flake_limit =
-    $("#flakeLimit").val() != "" ? $("#flakeLimit").val() : "-1";
+    $("#flakeLimit").val() != "" ? $("#flakeLimit").val() : undefined;
 
-  getDataFromServerAndDisplay(currentFilter);
+  getDataFromServerAndDisplay(backend_URL, currentFilter);
 });
-
-// first creation
-// define a default filter
-
-var currentFilter = {
-  userName: "-1",
-  minSize: "-1",
-  thickness: "-1",
-  material: "-1",
-  flake_limit: "-1",
-};
-//display the data
-getDataFromServerAndDisplay(currentFilter);
 
 // makes the table sortable
 $(function () {
@@ -94,3 +45,9 @@ $(function () {
       output: "{startRow} - {endRow} / {totalRows}",
     });
 });
+
+// first creation
+
+//display the data
+getDataFromServerAndDisplay(backend_URL, currentFilter);
+
