@@ -7,21 +7,17 @@ var currentFilter = {};
 $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
-  currentFilter.userName =
-    $("#userInput").val() != "" ? $("#userInput").val() : undefined;
-  currentFilter.minSize =
-    $("#sizeInput").val() != "" ? $("#sizeInput").val() : undefined;
-  currentFilter.thickness =
-    $("#thicknessSelect").val() != "" ? $("#thicknessSelect").val() : undefined;
-  currentFilter.exfoliated_material =
-    $("#materialSelect").val() != "" ? $("#materialSelect").val() : undefined;
-  currentFilter.flake_limit =
-    $("#flakeLimit").val() != "" ? $("#flakeLimit").val() : undefined;
+
+  if ($("#userInput").val() != "") currentFilter.userName = $("#userInput").val()
+  if ($("#sizeInput").val() != "") currentFilter.userName = $("#sizeInput").val()
+  if ($("#thicknessSelect").val() != "") currentFilter.userName = $("#thicknessSelect").val()
+  if ($("#materialSelect").val() != "") currentFilter.userName = $("#materialSelect").val()
+  if ($("#flakeLimit").val() != "") currentFilter.userName = $("#flakeLimit").val()
 
   getDataFromServerAndDisplay(backend_URL, currentFilter);
 });
 
-// makes the table sortable
+// makes the table sortable as well as a paginatior
 $(function () {
   $("#flake_table")
     .tablesorter({

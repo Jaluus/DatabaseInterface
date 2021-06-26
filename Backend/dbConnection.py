@@ -23,17 +23,17 @@ class dbConnectionQuery:
 
     def build_query(
         self,
-        flake_limit: str,
-        minSize: str,
-        exfoliated_material: str,
-        thickness: str,
+        minSize=0,
+        exfoliated_material=None,
+        thickness=None,
+        flake_limit=100,
         **kwargs,
     ):
         """
         Builds a query from the given query params
         """
 
-        # Default Query
+        # Default Query; Where 1=1 is a Workaround to make it easier to add multiple and clauses
         query = """
         SELECT flake.id, flake.size,flake.thickness,flake.used,c.exfoliated_material FROM flake
         JOIN chip c on c.id = flake.chip_id
@@ -41,13 +41,13 @@ class dbConnectionQuery:
         WHERE 1=1\n"""
 
         if minSize is not None:
-            query += """AND size > '{}'\n""".format(float(minSize))
+            query += """AND size > {}\n""".format(float(minSize))
 
         if exfoliated_material is not None:
             query += """AND exfoliated_material = '{}'\n""".format(exfoliated_material)
 
         if thickness is not None:
-            query += """AND thickness = {}\n""".format(thickness)
+            query += """AND thickness = '{}'\n""".format(thickness)
 
         # query += """ORDER BY flake.size DESC\n"""
         query += """LIMIT {}""".format(int(flake_limit))
@@ -55,13 +55,9 @@ class dbConnectionQuery:
 
     def get_flakes(
         self,
-        flake_limit=100,
-        minSize=0,
-        material=None,
-        thickness=None,
-        **kwargs,
+        query_dict,
     ):
-        query = self.build_query(flake_limit, minSize, material, thickness)
+        query = self.build_query(**query_dict)
 
         print(query)
 
