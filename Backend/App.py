@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from werkzeug import secure_filename
 from dbConnection import dbConnectionQuery
+import cv2
 
 app = Flask(__name__)
 
@@ -34,9 +34,10 @@ def data_POST():
     # here we want to get the value of user (i.e. ?user=some-value)
 
     f = request.files["20x"]
+    print(f)
     v = request.values.to_dict(flat=False)
     print(v)
-    f.save(secure_filename(f.filename))
+    f.save(v["filename"][0])
     return "file uploaded successfully"
 
 
