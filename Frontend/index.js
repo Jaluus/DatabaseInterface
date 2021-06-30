@@ -1,6 +1,6 @@
 import { createModal, createTabelRow, getDataFromServerAndDisplay } from "./functions.js";
 
-var backend_URL = "http://192.168.0.220:5000/flakes";
+var backend_URL = "http://192.168.0.59:5000/flakes";
 var currentFilter = {};
 
 //add a click listener to the filter button of the filter Modal
