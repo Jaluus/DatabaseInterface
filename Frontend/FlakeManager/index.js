@@ -1,6 +1,5 @@
-import { createModal, createTabelRow, getDataFromServerAndDisplay } from "./functions.js";
+import { getDataFromServerAndDisplay } from "./functions.js";
 
-var backend_URL = "http://192.168.0.59:5000/flakes";
 var currentFilter = {};
 
 //add a click listener to the filter button of the filter Modal
@@ -8,13 +7,14 @@ $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
 
-  if ($("#userInput").val() != "") currentFilter.userName = $("#userInput").val()
-  if ($("#sizeInput").val() != "") currentFilter.userName = $("#sizeInput").val()
-  if ($("#thicknessSelect").val() != "") currentFilter.userName = $("#thicknessSelect").val()
-  if ($("#materialSelect").val() != "") currentFilter.userName = $("#materialSelect").val()
-  if ($("#flakeLimit").val() != "") currentFilter.userName = $("#flakeLimit").val()
+  if ($("#userInput").val() != "") currentFilter.scan_user = $("#userInput").val()
+  if ($("#sizeInput").val() != "") currentFilter.flake_size = $("#sizeInput").val()
+  if ($("#thicknessSelect").val() != "") currentFilter.flake_thickness = $("#thicknessSelect").val()
+  if ($("#materialSelect").val() != "") currentFilter.scan_exfoliated_material = $("#materialSelect").val()
+  if ($("#flakeIdInput").val() != "") currentFilter.flake_id = $("#flakeIdInput").val()
+  if ($("#queryLimit").val() != "") currentFilter.query_limit = $("#queryLimit").val()
 
-  getDataFromServerAndDisplay(backend_URL, currentFilter);
+  getDataFromServerAndDisplay(currentFilter);
 });
 
 // makes the table sortable as well as a paginatior
@@ -45,5 +45,5 @@ $(function () {
 // first creation
 
 //display the data
-getDataFromServerAndDisplay(backend_URL, currentFilter);
+getDataFromServerAndDisplay(currentFilter);
 

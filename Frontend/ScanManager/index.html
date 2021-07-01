@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/jpg" href="assets/favicon.ico" />
+    <meta charset="UTF-8">
+    <title>Flake Database</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #00549F;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Flake Database</a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/FlakeManager">Flake Manager</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/ScanManager">Scan Manager</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <br>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2>
+                    Manage
+                    <b>Scans</b>
+                    <button type="button" data-bs-target="#filtermodal" data-bs-toggle="modal"
+                        class="btn btn-primary float-end"> <i class="bi bi-filter"> </i>Filter</i></button>
+                </h2>
+                <table class="table table-hover " id="flake_table">
+                    <thead>
+                        <tr id="table_header">
+                            <th>ID</th>
+                            <th>Scan Name</th>
+                            <th>User</th>
+                            <th>Material</th>
+                            <th>Time</th>
+                            <th style="text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>User</th>
+                            <th>Material</th>
+                            <th>Time</th>
+                            <th style="text-align: center;">Actions</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="ts-pager">
+                                <div class="form-inline">
+                                    <div class="btn-group btn-group-sm mx-1" role="group">
+                                        <button type="button" class="btn btn-secondary first" title="first">⇤</button>
+                                        <button type="button" class="btn btn-secondary prev" title="previous">←</button>
+                                    </div>
+                                    <span class="pagedisplay"></span>
+                                    <div class="btn-group btn-group-sm mx-1" role="group">
+                                        <button type="button" class="btn btn-secondary next" title="next">→</button>
+                                        <button type="button" class="btn btn-secondary last" title="last">⇥</button>
+                                    </div>
+                                    <select class="form-control-sm px-1 pagesize" title="Select page size">
+                                        <option value="10">10</option>
+                                        <option selected value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="all">All Rows</option>
+                                    </select>
+                                    <select class="form-control-sm px-4 mx-1 pagenum" title="Select page number"
+                                        value="1"></select>
+                                </div>
+                            </th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Filter Modal -->
+    <div id="filtermodal" class="modal fade" role="dialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Scan Filter</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- User Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">User</span>
+                        </div>
+                        <input type="text" class="form-control" id="userInput" placeholder="Jan" aria-label="user"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <!-- Name Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Name</span>
+                        </div>
+                        <input type="text" class="form-control" id="nameInput" placeholder="Jans Scan" aria-label="user"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <!-- Num Scans Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Shown Scans</span>
+                        </div>
+                        <input type="text" id="queryLimit" class="form-control" placeholder="100" aria-label="numScans"
+                            aria-describedby="basic-addon1" value="">
+                    </div>
+                    <!-- Material Selector -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="materialSelect">Material</label>
+                        </div>
+                        <select class="form-select" id="materialSelect">
+                            <option selected value="">Any</option>
+                            <option>WSe2</option>
+                            <option>WS2</option>
+                            <option>WTe2</option>
+                            <option>Graphene</option>
+                            <option>hBN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="filter_button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply
+                        Filter</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Filter Modal -->
+</body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+<script src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
+<script type="module" src="./index.js"></script>
+
+</html>
