@@ -1,4 +1,4 @@
-import { BACKEND_URL, IMAGE_URL } from "./constants.js"
+import { BACKEND_URL, IMAGE_URL } from "../constants.js"
 
 function deleteHandler(event) {
     var flake_id = event.data.id

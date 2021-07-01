@@ -1,5 +1,4 @@
 import { getDataFromServerAndDisplay } from "./functions.js";
-import { BACKEND_URL, IMAGE_URL } from "./constants.js"
 
 var currentFilter = {};
 

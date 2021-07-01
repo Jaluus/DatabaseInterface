@@ -1,4 +1,5 @@
-import { BACKEND_URL, IMAGE_URL } from "./constants.js"
+import { BACKEND_URL, IMAGE_URL } from "../constants.js"
+
 
 // Saving the Current State
 var current_scan_data = undefined
