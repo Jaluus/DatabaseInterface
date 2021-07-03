@@ -14,7 +14,9 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
 # Add a Keychain Later
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@localhost:3306/sqlalchemy"
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = "mysql+pymysql://root:root@localhost:3306/Full_Flakes"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # init the APP With the Database

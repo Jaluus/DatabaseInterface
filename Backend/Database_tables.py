@@ -54,12 +54,20 @@ class flake(db.Model):
     chip_id = db.Column(
         "chip_id", db.BigInteger, db.ForeignKey("chip.id"), nullable=False
     )
-    size = db.Column("size", db.Float, nullable=False)
-    thickness = db.Column("thickness", db.String(255), nullable=False)
-    used = db.Column("used", db.Boolean, default=False, nullable=False)
     position_x = db.Column("position_x", db.Float, nullable=False)
     position_y = db.Column("position_y", db.Float, nullable=False)
+    size = db.Column("size", db.Float, nullable=False)
+    thickness = db.Column("thickness", db.String(255), nullable=False)
     entropy = db.Column("entropy", db.Float, nullable=False)
+
+    entropy = db.Column("aspect_ratio", db.Float, nullable=False)
+    entropy = db.Column("width", db.Float, nullable=False)
+    entropy = db.Column("height", db.Float, nullable=False)
+    entropy = db.Column("proximity_stddev", db.Float, nullable=False)
+    entropy = db.Column("mean_contrast_r", db.Float, nullable=False)
+    entropy = db.Column("mean_contrast_g", db.Float, nullable=False)
+    entropy = db.Column("mean_contrast_b", db.Float, nullable=False)
+
     path = db.Column("path", db.String(255), nullable=False)
 
     def to_dict(self):
