@@ -5,7 +5,7 @@ from functions import *
 import cv2
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\Mikroskop Bilder"
+IMAGE_DIRECTORY = r"C:\Users\jlusl\Desktop\Mikroskop_Bilder"
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
 # Add a Keychain Later
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:root@localhost:3306/sqlalchemy"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@localhost:3306/sqlalchemy"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # init the APP With the Database
