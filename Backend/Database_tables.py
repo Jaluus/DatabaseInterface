@@ -60,13 +60,13 @@ class flake(db.Model):
     thickness = db.Column("thickness", db.String(255), nullable=False)
     entropy = db.Column("entropy", db.Float, nullable=False)
 
-    entropy = db.Column("aspect_ratio", db.Float, nullable=False)
-    entropy = db.Column("width", db.Float, nullable=False)
-    entropy = db.Column("height", db.Float, nullable=False)
-    entropy = db.Column("proximity_stddev", db.Float, nullable=False)
-    entropy = db.Column("mean_contrast_r", db.Float, nullable=False)
-    entropy = db.Column("mean_contrast_g", db.Float, nullable=False)
-    entropy = db.Column("mean_contrast_b", db.Float, nullable=False)
+    aspect_ratio = db.Column("aspect_ratio", db.Float, nullable=False)
+    width = db.Column("width", db.Float, nullable=False)
+    height = db.Column("height", db.Float, nullable=False)
+    proximity_stddev = db.Column("proximity_stddev", db.Float, nullable=False)
+    mean_contrast_r = db.Column("mean_contrast_r", db.Float, nullable=False)
+    mean_contrast_g = db.Column("mean_contrast_g", db.Float, nullable=False)
+    mean_contrast_b = db.Column("mean_contrast_b", db.Float, nullable=False)
 
     path = db.Column("path", db.String(255), nullable=False)
 
@@ -75,13 +75,37 @@ class flake(db.Model):
         del model_dict["_sa_instance_state"]
         return model_dict
 
-    def __init__(self, chip_id, size, thickness, position_x, position_y, entropy, path):
+    # this has to be easier
+    def __init__(
+        self,
+        chip_id: int,
+        position_x: float,
+        position_y: float,
+        size: float,
+        thickness,
+        entropy: float,
+        path: str,
+        aspect_ratio: float = -1,
+        width: float = -1,
+        height: float = -1,
+        proximity_stddev: float = -1,
+        mean_contrast_r: float = -1,
+        mean_contrast_g: float = -1,
+        mean_contrast_b: float = -1,
+    ):
         self.chip_id = chip_id
         self.size = size
         self.thickness = thickness
         self.position_x = position_x
         self.position_y = position_y
         self.entropy = entropy
+        self.aspect_ratio = aspect_ratio
+        self.width = width
+        self.height = height
+        self.proximity_stddev = proximity_stddev
+        self.mean_contrast_r = mean_contrast_r
+        self.mean_contrast_g = mean_contrast_g
+        self.mean_contrast_b = mean_contrast_b
         self.path = path
 
 
