@@ -3,6 +3,7 @@ from Database_tables import *
 import os
 import re
 import shutil
+import json
 
 
 def sorted_alphanumeric(data):
@@ -135,7 +136,6 @@ def get_flakes(db: SQLAlchemy, query_dict: dict):
             "chip_id": chip._id,
             "flake_thickness": flake.thickness,
             "flake_size": flake.size,
-            "flake_used": flake.used,
             "flake_path": flake.path,
         }
 
@@ -179,3 +179,78 @@ def get_flakes(db: SQLAlchemy, query_dict: dict):
     except KeyError as ke:
         print(ke)
         return []
+
+
+def Upload_scan_directory_to_db(
+    db: SQLAlchemy,
+    scan_directory,
+):
+    scan_meta_path = os.path.join(scan_directory, "meta.json")
+
+    with open(scan_meta_path) as f:
+        scan_meta = json.load(f)
+
+    current_scan = scan(
+        name=scan_meta["scan_name"],
+        user=scan_meta["scan_user"],
+        time=scan_meta["scan_time"],
+        exfoliated_material=scan_meta["scan_exfoliated_material"],
+    )
+
+    db.session.add(current_scan)
+    db.session.commit()
+    current_scan_id = current_scan._id
+
+    chip_directory_names = [
+        chip_directory_name
+        for chip_directory_name in sorted_alphanumeric(os.listdir(scan_directory))
+        if os.path.isdir(os.path.join(scan_directory, chip_directory_name))
+    ]
+
+    for chip_directory_name in chip_directory_names:
+        chip_directory = os.path.join(scan_directory, chip_directory_name)
+
+        # Create a new chip and push it to the DB
+        current_chip = chip(
+            current_scan_id,
+            chip_thickness=scan_meta["chip_thickness"],
+        )
+        db.session.add(current_chip)
+        db.session.commit()
+        # get the created ID
+        current_chip_id = current_chip._id
+
+        flake_directory_names = [
+            flake_directory_name
+            for flake_directory_name in sorted_alphanumeric(os.listdir(chip_directory))
+            if os.path.isdir(os.path.join(chip_directory, flake_directory_name))
+        ]
+
+        for flake_directory_name in flake_directory_names:
+            flake_directory = os.path.join(chip_directory, flake_directory_name)
+
+            # Open the JSON File
+            meta_path = os.path.join(flake_directory, "meta.json")
+            with open(meta_path, "r") as f:
+                meta_data = json.load(f)
+                flake_data = meta_data["flake"]
+                image_data = meta_data["images"]
+
+            if "chip_id" in flake_data.keys():
+                del flake_data["chip_id"]
+
+            current_flake = flake(chip_id=current_chip_id, **flake_data)
+            db.session.add(current_flake)
+            db.session.commit()
+
+            current_flake_id = current_flake._id
+
+            for key, value in image_data.items():
+                image_path = os.path.join(flake_data["path"], f"{key}.png")
+                current_image = image(
+                    flake_id=current_flake_id,
+                    path=image_path,
+                    **value,
+                )
+                db.session.add(current_image)
+                db.session.commit()

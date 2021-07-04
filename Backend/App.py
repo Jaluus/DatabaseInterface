@@ -1,22 +1,26 @@
 from flask import Flask, request, jsonify
+from zipfile import ZipFile
 from flask_cors import CORS, cross_origin
 from Database_tables import *
 from functions import *
 import cv2
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\jlusl\Desktop\Mikroskop_Bilder"
-
-app = Flask(__name__)
+IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\BA_tests\Upload_Images\Images"
+USERNAME = "root"
+PASSWORD = "root"
+HOST = "localhost"
+PORT = "3306"
+DB_NAME = "Full_Flakes"
 
 # # You need cors!!
+app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
-# Add a Keychain Later
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = "mysql+pymysql://root:root@localhost:3306/Full_Flakes"
+] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # init the APP With the Database
@@ -31,6 +35,28 @@ db.create_all()
 @cross_origin()
 def index():
     return "Hello Dude"
+
+
+@app.route("/upload", methods=["POST"])
+def UPLOAD_FILES():
+    file = request.files["zip"]
+    if file.filename[-4:] != ".zip":
+        return "wrong Filetype"
+
+    file_path = os.path.join(IMAGE_DIRECTORY, file.filename)
+    file.save(file_path)
+
+    with ZipFile(file_path, "r") as zipObj:
+        zipObj.extractall(file_path[:-4])
+
+    Upload_scan_directory_to_db(db, file_path[:-4])
+
+    return "File uploaded successfully"
+
+
+@app.route("/triggerDBintegration", methods=["GET"])
+def DB_UPLOAD():
+    pass
 
 
 @app.route("/flakes", methods=["GET"])
@@ -50,17 +76,6 @@ def SCAN_GET():
     scan_dict = get_scans(db, query_dict)
     print(scan_dict)
     return jsonify(scan_dict)
-
-
-# @app.route("/flakes", methods=["POST"])
-# @cross_origin()
-# def data_POST():
-#     f = request.files["20x"]
-#     print(f)
-#     v = request.values.to_dict(flat=False)
-#     print(v)
-#     f.save(v["filename"][0])
-#     return "file uploaded successfully"
 
 
 @app.route("/flakes", methods=["DELETE"])
@@ -86,6 +101,5 @@ def SCAN_DELETE():
 
 
 if __name__ == "__main__":
-
     # use host = "0.0.0.0" to make it available on the local net, aka all the IP adresses of the machine
     app.run(debug=True, host="0.0.0.0")
