@@ -236,6 +236,12 @@ def Upload_scan_directory_to_db(
                 flake_data = meta_data["flake"]
                 image_data = meta_data["images"]
 
+            if "path" not in flake_data.keys():
+                ##### REMOVE THIS LATER
+                path = os.path.normpath(flake_directory)
+                flake_data["path"] = "/".join(path.split(os.sep)[-3:])
+                #####
+
             if "chip_id" in flake_data.keys():
                 del flake_data["chip_id"]
 

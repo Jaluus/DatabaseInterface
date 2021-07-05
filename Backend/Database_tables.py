@@ -126,6 +126,7 @@ class image(db.Model):
     gain = db.Column("gain", db.Float, nullable=False)
     gamma = db.Column("gamma", db.Integer, nullable=False)
     exposure_time = db.Column("exposure_time", db.Float, nullable=False)
+    used = db.Column("used", db.Boolean, default=True, nullable=False)
 
     def to_dict(self):
         model_dict = dict(self.__dict__)

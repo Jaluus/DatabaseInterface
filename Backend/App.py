@@ -54,11 +54,6 @@ def UPLOAD_FILES():
     return "File uploaded successfully"
 
 
-@app.route("/triggerDBintegration", methods=["GET"])
-def DB_UPLOAD():
-    pass
-
-
 @app.route("/flakes", methods=["GET"])
 @cross_origin()
 def FLAKE_GET():
@@ -102,4 +97,5 @@ def SCAN_DELETE():
 
 if __name__ == "__main__":
     # use host = "0.0.0.0" to make it available on the local net, aka all the IP adresses of the machine
+    # Upload_scan_directory_to_db(db, r"C:\Users\jlusl\Desktop\Mikroskop_Bilder\Graphene\Eikes_Flocken_All")
     app.run(debug=True, host="0.0.0.0")
