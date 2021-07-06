@@ -36,6 +36,7 @@ class chip(db.Model):
     chip_thickness = db.Column(
         "chip_thickness", db.String(255), default="90nm", nullable=False
     )
+    used = db.Column("used", db.Boolean, default=False, nullable=False)
 
     def to_dict(self):
         model_dict = dict(self.__dict__)
@@ -67,6 +68,7 @@ class flake(db.Model):
     mean_contrast_r = db.Column("mean_contrast_r", db.Float, nullable=False)
     mean_contrast_g = db.Column("mean_contrast_g", db.Float, nullable=False)
     mean_contrast_b = db.Column("mean_contrast_b", db.Float, nullable=False)
+    used = db.Column("used", db.Boolean, default=False, nullable=False)
 
     path = db.Column("path", db.String(255), nullable=False)
 
@@ -126,7 +128,6 @@ class image(db.Model):
     gain = db.Column("gain", db.Float, nullable=False)
     gamma = db.Column("gamma", db.Integer, nullable=False)
     exposure_time = db.Column("exposure_time", db.Float, nullable=False)
-    used = db.Column("used", db.Boolean, default=True, nullable=False)
 
     def to_dict(self):
         model_dict = dict(self.__dict__)
