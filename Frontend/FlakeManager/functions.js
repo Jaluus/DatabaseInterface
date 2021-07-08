@@ -105,11 +105,11 @@ function createModal(data_dict) {
   <div style="width:50%; margin:auto;">
     <div id="carousel${data_dict.flake_id}" class="carousel slide" data-bs-ride="false">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carousel" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="0" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="4" aria-label="Slide 5"></button>
         </div>
 
     <div class="carousel-inner" data-bs-interval="false">
