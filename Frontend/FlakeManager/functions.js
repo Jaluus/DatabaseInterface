@@ -103,7 +103,7 @@ function createModal(data_dict) {
   //body design "${image_directory}/5x.png"
   var gallery = `
   <div style="width:50%; margin:auto;">
-    <div id="carousel" class="carousel slide" data-bs-ride="false">
+    <div id="carousel${data_dict.flake_id}" class="carousel slide" data-bs-ride="false">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -149,11 +149,11 @@ function createModal(data_dict) {
     </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
