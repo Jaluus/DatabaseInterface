@@ -30,6 +30,46 @@ function updateQuickInspectModal() {
       current_flakes.length
     } | current Magnification ${MAG_DICT[current_mag]}`
   );
+
+  $("#quick_inspect_eval").attr(
+    "src",
+    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.png`
+  );
+
+  //Update every Table Row
+  $("#flake_id").text(current_flakes[current_flake_index]?.flake_id);
+  $("#flake_thickness").text(
+    current_flakes[current_flake_index]?.flake_thickness
+  );
+  $("#flake_used").text(current_flakes[current_flake_index]?.flake_used);
+  $("#scan_exfoliated_material").text(
+    current_flakes[current_flake_index]?.scan_exfoliated_material
+  );
+  $("#flake_size").text(
+    Math.round(current_flakes[current_flake_index]?.flake_size) + " μm²"
+  );
+  $("#flake_width").text(
+    Math.round(current_flakes[current_flake_index]?.flake_width) + " μm"
+  );
+  $("#flake_height").text(
+    Math.round(current_flakes[current_flake_index]?.flake_height) + " μm"
+  );
+  $("#flake_aspect_ratio").text(
+    current_flakes[current_flake_index]?.flake_aspect_ratio
+  );
+  $("#flake_entropy").text(current_flakes[current_flake_index]?.flake_entropy);
+  $("#chip_id").text(current_flakes[current_flake_index]?.chip_id);
+  $("#chip_thickness").text(
+    current_flakes[current_flake_index]?.chip_thickness
+  );
+  $("#chip_used").text(current_flakes[current_flake_index]?.chip_used);
+  $("#scan_id").text(current_flakes[current_flake_index]?.scan_id);
+  $("#scan_name").text(current_flakes[current_flake_index]?.scan_name);
+  $("#scan_user").text(current_flakes[current_flake_index]?.scan_user);
+  $("#scan_time").text(current_flakes[current_flake_index]?.scan_time);
+  $("#scan_exfoliation_method").text(
+    current_flakes[current_flake_index]?.scan_exfoliation_method
+  );
 }
 
 function deleteCurrentFlake() {
@@ -161,12 +201,6 @@ function createQuickInspectModal() {
   var modal_body = $("<div>").addClass("modal-body");
   var modal_footer = $("<div>").addClass("modal-footer");
 
-  // buttons for exititng
-  var dismiss_button = $("<button>")
-    .attr({ type: "button", "data-bs-dismiss": "modal" })
-    .addClass("btn btn-secondary")
-    .text("Close");
-
   //header design
   var heading = $("<h4>")
     .attr("id", "quick_inspect_heading")
@@ -178,7 +212,7 @@ function createQuickInspectModal() {
   var overview = /*html*/ `
   <div class="row">
     <div class="col-3">
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Flake Key</th>
@@ -187,45 +221,45 @@ function createQuickInspectModal() {
         </thead>
         <tbody>
           <tr>
-            <th id="flake_id" scope="row">Flake ID</th>
-            <td></td>
+            <th scope="row">Flake ID</th>
+            <td id="flake_id"></td>
           </tr>
           <tr>
-            <th id="flake_thickness" scope="row">Flake Thickness</th>
-            <td></td>
+            <th scope="row">Flake Thickness</th>
+            <td id="flake_thickness"></td>
           </tr>
           <tr>
-            <th id="flake_used" scope="row">Flake Used</th>
-            <td></td>
+            <th scope="row">Flake Used</th>
+            <td id="flake_used"></td>
           </tr>
           <tr>
-            <th id="scan_exfoliated_material" scope="row">Flake Material</th>
-            <td></td>
+            <th scope="row">Flake Material</th>
+            <td id="scan_exfoliated_material"></td>
           </tr>
           <tr>
-            <th id="flake_size" scope="row">Flake Size</th>
-            <td></td>
+            <th scope="row">Flake Size</th>
+            <td id="flake_size"></td>
           </tr>
           <tr>
-            <th id="flake_width" scope="row">Flake Width</th>
-            <td></td>
+            <th scope="row">Flake Width</th>
+            <td id="flake_width"></td>
           </tr>
           <tr>
-            <th id="flake_height" scope="row">Flake Length</th>
-            <td></td>
+            <th scope="row">Flake Length</th>
+            <td id="flake_height"></td>
           </tr>
           <tr>
-            <th id="flake_aspect_ratio" scope="row">Flake Aspect Ratio</th>
-            <td></td>
+            <th scope="row">Flake Aspect Ratio</th>
+            <td id="flake_aspect_ratio"></td>
           </tr>
           <tr>
-            <th id="flake_entropy" scope="row">Flake Entropy</th>
-            <td></td>
+            <th scope="row">Flake Entropy</th>
+            <td id="flake_entropy"></td>
           </tr>
         </tbody>
       </table>
 
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Chip Key</th>
@@ -234,21 +268,21 @@ function createQuickInspectModal() {
         </thead>
         <tbody>
           <tr>
-            <th id="chip_id" scope="row">Chip ID</th>
-            <td></td>
+            <th scope="row">Chip ID</th>
+            <td id="chip_id"></td>
           </tr>
           <tr>
-            <th id="chip_thickness" scope="row">Chip Thickness</th>
-            <td></td>
+            <th scope="row">Chip Thickness</th>
+            <td id="chip_thickness"></td>
           </tr>
           <tr>
-            <th id="chip_used" scope="row">Chip Used</th>
-            <td></td>
+            <th scope="row">Chip Used</th>
+            <td id="chip_used"></td>
           </tr>
         </tbody>
       </table>
 
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Scan Key</th>
@@ -257,24 +291,24 @@ function createQuickInspectModal() {
         </thead>
         <tbody>
           <tr>
-            <th id="scan_id" scope="row">Scan ID</th>
-            <td></td>
+            <th scope="row">Scan ID</th>
+            <td id="scan_id"></td>
           </tr>
           <tr>
-            <th id="scan_name" scope="row">Scan Name</th>
-            <td></td>
+            <th scope="row">Scan Name</th>
+            <td id="scan_name"></td>
           </tr>
           <tr>
-            <th id="scan_user" scope="row">Scan User</th>
-            <td></td>
+            <th scope="row">Scan User</th>
+            <td id="scan_user"></td>
           </tr>
           <tr>
-            <th id="scan_time" scope="row">Scan Time</th>
-            <td></td>
+            <th scope="row">Scan Time</th>
+            <td id="scan_time"></td>
           </tr>
           <tr>
-            <th id="scan_exfoliation_method" scope="row">Scan Exfoliation Method</th>
-            <td></td>
+            <th scope="row">Scan Exfoliation Method</th>
+            <td id="scan_exfoliation_method"></td>
           </tr>
         </tbody>
       </table>
@@ -287,13 +321,32 @@ function createQuickInspectModal() {
 
   <div class="col-3 mx-auto text-center">
     <img id="quick_inspect_overview" class="img-thumbnail" loading="lazy"> 
+    <img id="quick_inspect_eval" class="img-thumbnail" loading="lazy">
   </div>
 </div>
   `;
 
   modal_body.append(overview);
 
+  // buttons for exititng
+  var dismiss_button = $("<button>")
+    .attr({ type: "button", "data-bs-dismiss": "modal" })
+    .addClass("btn btn-secondary")
+    .text("Close");
+  var delete_button = $("<button>")
+    .attr({ type: "button", "data-bs-dismiss": "modal" })
+    .addClass("btn btn-danger")
+    .text("Delete")
+    .click(deleteCurrentFlake);
+  var download_button = $("<button>")
+    .attr("type", "button")
+    .addClass("btn btn-primary")
+    .text("Download as ZIP")
+    .click(downloadCurrentFlake);
+
   //footer Design
+  modal_footer.append(delete_button);
+  modal_footer.append(download_button);
   modal_footer.append(dismiss_button);
 
   // build the final modal
