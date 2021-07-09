@@ -33,7 +33,19 @@ function updateQuickInspectModal() {
 }
 
 function deleteCurrentFlake() {
-  confirm(`Delete Flake ${current_flakes[current_flake_index]?.flake_id}?`);
+  if (
+    confirm(`Delete Flake ${current_flakes[current_flake_index]?.flake_id}?`)
+  ) {
+    $.ajax({
+      url: `${BACKEND_URL}/flakes?flake_id=${current_flakes[current_flake_index]?.flake_id}`,
+      type: "DELETE",
+      success: function (result) {
+        //removes the Flake from the Array
+        current_flakes.splice(current_flake_index, 1);
+        updateQuickInspectModal();
+      },
+    });
+  }
 }
 
 function deleteHandler(event) {
@@ -270,11 +282,11 @@ function createQuickInspectModal() {
     </div>
 
     <div class="col-6 mx-auto text-center">
-      <img id="quick_inspect_image" class="img-thumbnail"> 
+      <img id="quick_inspect_image" class="img-thumbnail" loading="lazy"> 
     </div>
 
   <div class="col-3 mx-auto text-center">
-    <img id="quick_inspect_overview" class="img-thumbnail"> 
+    <img id="quick_inspect_overview" class="img-thumbnail" loading="lazy"> 
   </div>
 </div>
   `;
@@ -330,7 +342,7 @@ function createQuickInspectModal() {
 
 function createViewModal(data_dict) {
   var modal_id = `modalview${data_dict.scan_id}`;
-  var image_directory = `${IMAGE_URL}/${data_dict.scan_exfoliated_material}/${data_dict.scan_name}`;
+  var image_directory = `${IMAGE_URL}/${data_dict.scan_name}`;
 
   // creating the Modal
   var view_modal = $("<div>")
@@ -367,7 +379,7 @@ function createViewModal(data_dict) {
   var overview = `
         <div class="row bg-faded">
             <div class="col-6 mx-auto text-center">
-                <img src="${image_directory}/overview_compressed.jpg" class="img-thumbnail" loading="lazy"> 
+                <img src="${image_directory}/overview.png" class="img-thumbnail" loading="lazy"> 
             </div>
         </div>
     `;

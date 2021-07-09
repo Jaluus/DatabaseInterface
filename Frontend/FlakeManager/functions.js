@@ -117,7 +117,7 @@ function createModal(data_dict) {
   var gallery = /*html*/ `
   <div class="row">
     <div class="col-3">
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Flake Key</th>
@@ -164,7 +164,7 @@ function createModal(data_dict) {
         </tbody>
       </table>
 
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Chip Key</th>
@@ -187,7 +187,7 @@ function createModal(data_dict) {
         </tbody>
       </table>
 
-      <table class="table table-hover">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th style="width:50%" scope="col">Scan Key</th>

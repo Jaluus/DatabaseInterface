@@ -8,12 +8,12 @@ import zipfile
 import sys
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\Mikroskop Bilder"
-USERNAME = "root"
-PASSWORD = "root"
+IMAGE_DIRECTORY = r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder"
+USERNAME = "flakeprogramm"
+PASSWORD = "1234"
 HOST = "localhost"
 PORT = "3306"
-DB_NAME = "Full_Flakes"
+DB_NAME = "flakes"
 
 # # You need cors!!
 app = Flask(__name__)
@@ -41,19 +41,22 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def UPLOAD_FILES():
-    file = request.files["zip"]
-    if file.filename[-4:] != ".zip":
-        return "wrong Filetype"
+    try:
+        file = request.files["zip"]
+        if file.filename[-4:] != ".zip":
+            return "wrong Filetype"
 
-    file_path = os.path.join(IMAGE_DIRECTORY, file.filename)
-    file.save(file_path)
+        file_path = os.path.join(IMAGE_DIRECTORY, file.filename)
+        file.save(file_path)
 
-    with ZipFile(file_path, "r") as zipObj:
-        zipObj.extractall(file_path[:-4])
+        with ZipFile(file_path, "r") as zipObj:
+            zipObj.extractall(file_path[:-4])
 
-    Upload_scan_directory_to_db(db, file_path[:-4])
+        Upload_scan_directory_to_db(db, file_path[:-4])
 
-    return "File uploaded successfully"
+        return "File uploaded successfully"
+    except:
+        return "Something went wrong!"
 
 
 @app.route("/flakes", methods=["GET"])
@@ -85,9 +88,7 @@ def FLAKE_DOWNLOAD():
         memory_file.seek(0)
 
         return send_file(
-            memory_file,
-            download_name=f"Flake_{flake_id:.0f}.zip",
-            as_attachment=True,
+            memory_file, download_name=f"Flake_{flake_id:.0f}.zip", as_attachment=True,
         )
     except:
         print("Unexpected error:", sys.exc_info()[0])
@@ -129,9 +130,10 @@ def SCAN_DELETE():
 if __name__ == "__main__":
     # use host = "0.0.0.0" to make it available on the local net, aka all the IP adresses of the machine
     # Upload_scan_directory_to_db(
-    #     db, r"C:\Users\duden\Desktop\Mikroskop Bilder\Luca_Scan_060721"
+    #     db,
+    #     r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\Eikes_Flocken_Full_Final",
     # )
     # Upload_scan_directory_to_db(
-    #     db, r"C:\Users\duden\Desktop\Mikroskop Bilder\Eikes_Flocken_Full_Final"
+    #     db, r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\Luca_Scan_060721"
     # )
     app.run(debug=True, host="0.0.0.0")
