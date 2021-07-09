@@ -124,19 +124,31 @@ def get_scans(db: SQLAlchemy, query_dict: dict):
     except KeyError as ke:
         print(ke)
         return []
+    except OSError as e:
+        print(e)
+        return []
 
 
 def get_flakes(db: SQLAlchemy, query_dict: dict):
     try:
         RETURNED_VALUES = {
             "flake_id": flake._id,
-            "scan_name": scan.name,
-            "scan_id": scan._id,
-            "scan_exfoliated_material": scan.exfoliated_material,
-            "chip_id": chip._id,
-            "flake_thickness": flake.thickness,
-            "flake_size": flake.size,
             "flake_path": flake.path,
+            "flake_size": flake.size,
+            "flake_thickness": flake.thickness,
+            "flake_used": flake.used,
+            "flake_height": flake.height,
+            "flake_width": flake.width,
+            "flake_aspect_ratio": flake.aspect_ratio,
+            "flake_entropy": flake.entropy,
+            "chip_id": chip._id,
+            "chip_used": chip.used,
+            "chip_thickness": chip.chip_thickness,
+            "scan_id": scan._id,
+            "scan_name": scan.name,
+            "scan_user": scan.user,
+            "scan_exfoliated_material": scan.exfoliated_material,
+            "scan_time": scan.time,
         }
 
         if "query_limit" in query_dict:
@@ -170,14 +182,17 @@ def get_flakes(db: SQLAlchemy, query_dict: dict):
             .limit(FLAKE_LIMIT)
         )
 
-        new_dict = [
+        matching_flakes = [
             {key: value for (key, value) in zip(RETURNED_VALUES.keys(), f)}
             for f in flakes
         ]
 
-        return new_dict
+        return matching_flakes
     except KeyError as ke:
         print(ke)
+        return []
+    except OSError as e:
+        print(e)
         return []
 
 

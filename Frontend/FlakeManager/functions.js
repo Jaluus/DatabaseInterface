@@ -4,7 +4,7 @@ function deleteHandler(event) {
   var flake_id = event.data.id;
   if (confirm(`Do you wish to delete flake ${flake_id}?`)) {
     $.ajax({
-      url: `${BACKEND_URL}/flakes?id=${flake_id}`,
+      url: `${BACKEND_URL}/flakes?flake_id=${flake_id}`,
       type: "DELETE",
       success: function (result) {
         // we need to rebuild the table
@@ -14,6 +14,13 @@ function deleteHandler(event) {
       },
     });
   }
+}
+
+function downloadHandler(event) {
+  var flake_id = event.data.id;
+
+  // Quick and Dirty way to download the File from my server
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${flake_id}`;
 }
 
 function createTabelRow(data_dict) {
@@ -88,7 +95,8 @@ function createModal(data_dict) {
   var download_button = $("<button>")
     .attr("type", "button")
     .addClass("btn btn-primary")
-    .text("Download as ZIP");
+    .text("Download as ZIP")
+    .click({ id: data_dict.flake_id }, downloadHandler);
   var dismiss_button = $("<button>")
     .attr({ type: "button", "data-bs-dismiss": "modal" })
     .addClass("btn btn-secondary")
@@ -100,64 +108,181 @@ function createModal(data_dict) {
     .text(`Viewing Flake ${data_dict.flake_id}`);
   modal_header.append(heading);
 
-  //body design "${image_directory}/5x.png"
-  var gallery = `
-  <div style="width:50%; margin:auto;">
-    <div id="carousel${data_dict.flake_id}" class="carousel slide" data-bs-ride="false">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="0" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="4" aria-label="Slide 5"></button>
+  // Make the Timeformat look noice
+  var Unix = data_dict.scan_time;
+  var dateObject = new Date(Unix * 1000);
+  const humanDateFormat = dateObject.toLocaleString();
+
+  //body design
+  var gallery = /*html*/ `
+  <div class="row">
+    <div class="col-3">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Flake Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Flake ID</th>
+            <td>${data_dict.flake_id}</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Thickness</th>
+            <td>${data_dict.flake_thickness}</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Used</th>
+            <td>${data_dict.flake_used}</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Material</th>
+            <td>${data_dict.scan_exfoliated_material}</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Size</th>
+            <td>${data_dict.flake_size} μm²</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Width</th>
+            <td>${data_dict.flake_width} μm</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Length</th>
+            <td>${data_dict.flake_height} μm</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Aspect Ratio</th>
+            <td>${data_dict.flake_aspect_ratio}</td>
+          </tr>
+          <tr>
+            <th scope="row">Flake Entropy</th>
+            <td>${data_dict.flake_entropy}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Chip Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Chip ID</th>
+            <td>${data_dict.chip_id}</td>
+          </tr>
+          <tr>
+            <th scope="row">Chip Thickness</th>
+            <td>${data_dict.chip_thickness}</td>
+          </tr>
+          <tr>
+            <th scope="row">Chip Used</th>
+            <td>${data_dict.chip_used}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Scan Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Scan ID</th>
+            <td>${data_dict.scan_id}</td>
+          </tr>
+          <tr>
+            <th scope="row">Scan Name</th>
+            <td>${data_dict.scan_name}</td>
+          </tr>
+          <tr>
+            <th scope="row">Scan User</th>
+            <td>${data_dict.scan_user}</td>
+          </tr>
+          <tr>
+            <th scope="row">Scan Time</th>
+            <td>${humanDateFormat}</td>
+          </tr>
+          <tr>
+            <th scope="row">Scan Exfoliation Method</th>
+            <td>PLACEHOLDER</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="col-6">
+      <div style="width:100%; margin:auto;">
+        <div id="carousel${data_dict.flake_id}" class="carousel slide" data-bs-ride="false">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="0" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            </div>
+
+        <div class="carousel-inner" data-bs-interval="false">
+        <div class="carousel-item">
+            <img src="${image_directory}/2.5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <div class="carousel-caption d-none d-md-block">
+            <h5>2.5x Image</h5>
+            </div>
         </div>
 
-    <div class="carousel-inner" data-bs-interval="false">
-    <div class="carousel-item">
-        <img src="${image_directory}/2.5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
-        <div class="carousel-caption d-none d-md-block">
-        <h5>2.5x Image</h5>
+        <div class="carousel-item">
+            <img src="${image_directory}/5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>5x Image</h5>
+            </div>
         </div>
-    </div>
 
-    <div class="carousel-item">
-        <img src="${image_directory}/5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
-        <div class="carousel-caption d-none d-md-block">
-            <h5>5x Image</h5>
+        <div class="carousel-item active">
+            <img src="${image_directory}/20x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>20x Image</h5>
+            </div>
         </div>
-    </div>
 
-    <div class="carousel-item active">
-        <img src="${image_directory}/20x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
-        <div class="carousel-caption d-none d-md-block">
-            <h5>20x Image</h5>
+        <div class="carousel-item">
+            <img src="${image_directory}/50x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>50x Image</h5>
+            </div>
         </div>
-    </div>
 
-    <div class="carousel-item">
-        <img src="${image_directory}/50x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
-        <div class="carousel-caption d-none d-md-block">
-            <h5>50x Image</h5>
+        <div class="carousel-item">
+            <img src="${image_directory}/100x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>100x Image</h5>
+            </div>
         </div>
-    </div>
-
-    <div class="carousel-item">
-        <img src="${image_directory}/100x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
-        <div class="carousel-caption d-none d-md-block">
-            <h5>100x Image</h5>
         </div>
-    </div>
-    </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
+  </div>
+
+  <div class="col-3 mx-auto text-center">
+    <img src="${image_directory}/overview_marked.jpg" class="img-thumbnail"> 
+
+  </div>
 </div>
 `;
 

@@ -7,12 +7,11 @@ class scan(db.Model):
     __tablename__ = "scan"
     __table_args__ = {"mysql_engine": "InnoDB"}
     _id = db.Column("id", db.BigInteger, unique=True, primary_key=True)
-    name = db.Column("name", db.String(255), default="None", nullable=False)
+    name = db.Column("name", db.String(255))
     user = db.Column("user", db.String(255), nullable=False)
     time = db.Column("time", db.BigInteger, nullable=False)
-    exfoliated_material = db.Column(
-        "exfoliated_material", db.String(255), default="None", nullable=False
-    )
+    exfoliated_material = db.Column("exfoliated_material", db.String(255))
+    exfoliated_method = db.Column("exfoliated_method", db.String(255))
 
     def to_dict(self):
         model_dict = dict(self.__dict__)

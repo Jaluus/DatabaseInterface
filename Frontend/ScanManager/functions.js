@@ -13,6 +13,25 @@ const MAG_DICT = {
   5: "100x",
 };
 
+function updateQuickInspectModal() {
+  // swap the Image and the heading
+  $("#quick_inspect_image").attr(
+    "src",
+    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/${MAG_DICT[current_mag]}.png`
+  );
+  $("#quick_inspect_overview").attr(
+    "src",
+    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/overview_marked.jpg`
+  );
+  $("#quick_inspect_heading").text(
+    `Currently inspecting "${current_scan_data?.scan_name}" | Flake ID : ${
+      current_flakes[current_flake_index]?.flake_id
+    } | Current Flake ${current_flake_index + 1} / ${
+      current_flakes.length
+    } | current Magnification ${MAG_DICT[current_mag]}`
+  );
+}
+
 function deleteCurrentFlake() {
   confirm(`Delete Flake ${current_flakes[current_flake_index]?.flake_id}?`);
 }
@@ -26,7 +45,7 @@ function deleteHandler(event) {
       )
     ) {
       $.ajax({
-        url: `${BACKEND_URL}/scans?id=${scan_id}`,
+        url: `${BACKEND_URL}/scans?scan_id=${scan_id}`,
         type: "DELETE",
         success: function (result) {
           // we need to rebuild the table
@@ -37,6 +56,11 @@ function deleteHandler(event) {
       });
     }
   }
+}
+
+function downloadCurrentFlake(event) {
+  // Quick and Dirty way to download the File from my server
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
 }
 
 function quickViewHandler(event) {
@@ -50,15 +74,7 @@ function quickViewHandler(event) {
     current_flakes = data;
     current_flake_index = 0;
     current_mag = 1;
-    $("#quick_inspect_image").attr(
-      "src",
-      `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/${MAG_DICT[current_mag]}.png`
-    );
-    $("#quick_inspect_heading").text(
-      `Current Scan: ${current_scan_data.scan_id}, current Flake ID: ${
-        current_flakes[current_flake_index]?.flake_id
-      }, current Flake ${current_flake_index + 1} / ${current_flakes.length}`
-    );
+    updateQuickInspectModal();
   });
 }
 
@@ -124,7 +140,7 @@ function createQuickInspectModal() {
   var modal_id = `modalquick`;
 
   // creating the Modal
-  var view_modal = $("<div>")
+  var quickInspectModal = $("<div>")
     .attr({ role: "dialog", id: modal_id, tabindex: -1, "aria-modal": true })
     .addClass("modal fade viewer");
   var modal_dialog = $("<div>").addClass("modal-dialog modal-fullscreen");
@@ -146,13 +162,122 @@ function createQuickInspectModal() {
   modal_header.append(heading);
 
   //body design
-  var overview = `
-        <div class="row bg-faded">
-            <div class="col-6 mx-auto text-center">
-                <img id="quick_inspect_image" class="img-thumbnail"> 
-            </div>
-        </div>
-    `;
+
+  var overview = /*html*/ `
+  <div class="row">
+    <div class="col-3">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Flake Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th id="flake_id" scope="row">Flake ID</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_thickness" scope="row">Flake Thickness</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_used" scope="row">Flake Used</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="scan_exfoliated_material" scope="row">Flake Material</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_size" scope="row">Flake Size</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_width" scope="row">Flake Width</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_height" scope="row">Flake Length</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_aspect_ratio" scope="row">Flake Aspect Ratio</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="flake_entropy" scope="row">Flake Entropy</th>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Chip Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th id="chip_id" scope="row">Chip ID</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="chip_thickness" scope="row">Chip Thickness</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="chip_used" scope="row">Chip Used</th>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width:50%" scope="col">Scan Key</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th id="scan_id" scope="row">Scan ID</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="scan_name" scope="row">Scan Name</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="scan_user" scope="row">Scan User</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="scan_time" scope="row">Scan Time</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th id="scan_exfoliation_method" scope="row">Scan Exfoliation Method</th>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="col-6 mx-auto text-center">
+      <img id="quick_inspect_image" class="img-thumbnail"> 
+    </div>
+
+  <div class="col-3 mx-auto text-center">
+    <img id="quick_inspect_overview" class="img-thumbnail"> 
+  </div>
+</div>
+  `;
 
   modal_body.append(overview);
 
@@ -164,10 +289,10 @@ function createQuickInspectModal() {
   modal_content.append(modal_body);
   modal_content.append(modal_footer);
   modal_dialog.append(modal_content);
-  view_modal.append(modal_dialog);
+  quickInspectModal.append(modal_dialog);
 
   // adding a Keylistener into the Modal to listen Change to current state
-  view_modal.on("keydown", function (e) {
+  quickInspectModal.on("keydown", function (e) {
     //W
     if (e.key == "w" || e.key == "W" || e.key == "ArrowUp") {
       current_mag += 1;
@@ -187,6 +312,8 @@ function createQuickInspectModal() {
     //Q
     else if (e.key == "q" || e.key == "Q") {
       deleteCurrentFlake();
+    } else if (e.key == "e" || e.key == "E") {
+      downloadCurrentFlake();
     }
 
     // clamping the Values
@@ -196,18 +323,9 @@ function createQuickInspectModal() {
     );
     current_mag = Math.min(Math.max(current_mag, 1), 5);
 
-    // swap the Image and the heading
-    $("#quick_inspect_image").attr(
-      "src",
-      `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/${MAG_DICT[current_mag]}.png`
-    );
-    $("#quick_inspect_heading").text(
-      `Current Scan: ${current_scan_data?.scan_id}, current Flake ID: ${
-        current_flakes[current_flake_index]?.flake_id
-      }, current Flake ${current_flake_index + 1} / ${current_flakes.length}`
-    );
+    updateQuickInspectModal();
   });
-  return view_modal;
+  return quickInspectModal;
 }
 
 function createViewModal(data_dict) {

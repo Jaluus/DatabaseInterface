@@ -1,12 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from zipfile import ZipFile
 from flask_cors import CORS, cross_origin
 from Database_tables import *
 from functions import *
-import cv2
+from io import BytesIO
+import zipfile
+import sys
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\BA_tests\Upload_Images\Images"
+IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\Mikroskop Bilder"
 USERNAME = "root"
 PASSWORD = "root"
 HOST = "localhost"
@@ -63,6 +65,35 @@ def FLAKE_GET():
     return jsonify(flake_dict)
 
 
+@app.route("/downloadFlake", methods=["GET"])
+@cross_origin()
+def FLAKE_DOWNLOAD():
+    # here we want to get the value of user (i.e. ?user=some-value)
+    try:
+        flake_id = int(request.args.get("flake_id"))
+
+        flake_query = {"flake_id": flake_id}
+        flake_dict = get_flakes(db, flake_query)[0]
+        flake_dir = os.path.join(IMAGE_DIRECTORY, flake_dict["flake_path"])
+
+        # Keep the Zipfile only in Memory
+        memory_file = BytesIO()
+        with zipfile.ZipFile(memory_file, "w") as zf:
+            for file_name in os.listdir(flake_dir):
+                file_path = os.path.join(flake_dir, file_name)
+                zf.write(file_path, file_name)
+        memory_file.seek(0)
+
+        return send_file(
+            memory_file,
+            download_name=f"Flake_{flake_id:.0f}.zip",
+            as_attachment=True,
+        )
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        return "Wrong Query, Please use $flake_id=[The needed Flake ID]"
+
+
 @app.route("/scans", methods=["GET"])
 @cross_origin()
 def SCAN_GET():
@@ -77,7 +108,7 @@ def SCAN_GET():
 @cross_origin()
 def FLAKES_DELETE():
     try:
-        flake_id = int(request.args.get("id"))
+        flake_id = int(request.args.get("flake_id"))
         delete_flake(db, IMAGE_DIRECTORY, flake_id)
         return "Deleted Flake"
     except:
@@ -88,8 +119,8 @@ def FLAKES_DELETE():
 @cross_origin()
 def SCAN_DELETE():
     try:
-        scan_id = int(request.args.get("id"))
-        # delete_scan(db, IMAGE_DIRECTORY, scan_id)
+        scan_id = int(request.args.get("scan_id"))
+        delete_scan(db, IMAGE_DIRECTORY, scan_id)
         return "Deleted SCAN"
     except:
         return "Invalid Key"
@@ -97,5 +128,10 @@ def SCAN_DELETE():
 
 if __name__ == "__main__":
     # use host = "0.0.0.0" to make it available on the local net, aka all the IP adresses of the machine
-    # Upload_scan_directory_to_db(db, r"C:\Users\jlusl\Desktop\Mikroskop_Bilder\Graphene\Eikes_Flocken_All")
+    # Upload_scan_directory_to_db(
+    #     db, r"C:\Users\duden\Desktop\Mikroskop Bilder\Luca_Scan_060721"
+    # )
+    # Upload_scan_directory_to_db(
+    #     db, r"C:\Users\duden\Desktop\Mikroskop Bilder\Eikes_Flocken_Full_Final"
+    # )
     app.run(debug=True, host="0.0.0.0")
