@@ -1,19 +1,25 @@
-from flask import Flask, request, jsonify, send_file
+import sys
+import zipfile
+from io import BytesIO
 from zipfile import ZipFile
+
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
+
+from config import config
 from Database_tables import *
 from functions import *
-from io import BytesIO
-import zipfile
-import sys
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder"
-USERNAME = "flakeprogramm"
-PASSWORD = "1234"
-HOST = "localhost"
-PORT = "3306"
-DB_NAME = "flakes"
+IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\Mikroskop Bilder"
+
+KEYCHAIN = config()
+
+USERNAME = KEYCHAIN["username"]
+PASSWORD = KEYCHAIN["password"]
+HOST = KEYCHAIN["host"]
+PORT = KEYCHAIN["port"]
+DATABASE = KEYCHAIN["database"]
 
 # # You need cors!!
 app = Flask(__name__)
@@ -22,7 +28,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
+] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # init the APP With the Database
@@ -88,7 +94,9 @@ def FLAKE_DOWNLOAD():
         memory_file.seek(0)
 
         return send_file(
-            memory_file, download_name=f"Flake_{flake_id:.0f}.zip", as_attachment=True,
+            memory_file,
+            download_name=f"Flake_{flake_id:.0f}.zip",
+            as_attachment=True,
         )
     except:
         print("Unexpected error:", sys.exc_info()[0])
