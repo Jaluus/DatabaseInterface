@@ -86,27 +86,11 @@ function createModal(data_dict) {
   var modal_body = $("<div>").addClass("modal-body");
   var modal_footer = $("<div>").addClass("modal-footer");
 
-  // buttons for exititng
-  var delete_button = $("<button>")
-    .attr({ type: "button", "data-bs-dismiss": "modal" })
-    .addClass("btn btn-danger")
-    .text("Delete")
-    .click({ id: data_dict.flake_id }, deleteHandler);
-  var download_button = $("<button>")
-    .attr("type", "button")
-    .addClass("btn btn-primary")
-    .text("Download as ZIP")
-    .click({ id: data_dict.flake_id }, downloadHandler);
-  var dismiss_button = $("<button>")
-    .attr({ type: "button", "data-bs-dismiss": "modal" })
-    .addClass("btn btn-secondary")
-    .text("Close");
-
   //header design
-  var heading = $("<h4>")
-    .addClass("modal-title")
-    .text(`Viewing Flake ${data_dict.flake_id}`);
+  var heading = `
+      <h4 class = "modal-title">Current Viewing Flake ID : ${data_dict.flake_id}</h4>`;
   modal_header.append(heading);
+  modal_header.append(dismiss_button);
 
   // Make the Timeformat look noice
   var Unix = data_dict.scan_time;
@@ -143,15 +127,15 @@ function createModal(data_dict) {
           </tr>
           <tr>
             <th scope="row">Flake Size</th>
-            <td>${data_dict.flake_size} μm²</td>
+            <td>${Math.round(data_dict.flake_size)} μm²</td>
           </tr>
           <tr>
             <th scope="row">Flake Width</th>
-            <td>${data_dict.flake_width} μm</td>
+            <td>${Math.round(data_dict.flake_width)} μm</td>
           </tr>
           <tr>
             <th scope="row">Flake Length</th>
-            <td>${data_dict.flake_height} μm</td>
+            <td>${Math.round(data_dict.flake_height)} μm</td>
           </tr>
           <tr>
             <th scope="row">Flake Aspect Ratio</th>
@@ -221,57 +205,73 @@ function createModal(data_dict) {
     </div>
     <div class="col-6">
       <div style="width:100%; margin:auto;">
-        <div id="carousel${data_dict.flake_id}" class="carousel slide" data-bs-ride="false">
+        <div id="carousel${
+          data_dict.flake_id
+        }" class="carousel slide" data-bs-interval="false">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="0" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                <button type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                <button type="button" data-bs-target="#carousel${
+                  data_dict.flake_id
+                }" data-bs-slide-to="0" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carousel${
+                  data_dict.flake_id
+                }" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carousel${
+                  data_dict.flake_id
+                }" data-bs-slide-to="2" class="active" aria-current="true" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carousel${
+                  data_dict.flake_id
+                }" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carousel${
+                  data_dict.flake_id
+                }" data-bs-slide-to="4" aria-label="Slide 5"></button>
             </div>
 
-        <div class="carousel-inner" data-bs-interval="false">
+        <div class="carousel-inner">
         <div class="carousel-item">
-            <img src="${image_directory}/2.5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <img src="${image_directory}/2.5x.png" class="d-block w-100" loading="lazy">
             <div class="carousel-caption d-none d-md-block">
             <h5>2.5x Image</h5>
             </div>
         </div>
 
         <div class="carousel-item">
-            <img src="${image_directory}/5x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <img src="${image_directory}/5x.png" class="d-block w-100" loading="lazy">
             <div class="carousel-caption d-none d-md-block">
                 <h5>5x Image</h5>
             </div>
         </div>
 
         <div class="carousel-item active">
-            <img src="${image_directory}/20x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <img src="${image_directory}/20x.png" class="d-block w-100" loading="lazy">
             <div class="carousel-caption d-none d-md-block">
                 <h5>20x Image</h5>
             </div>
         </div>
 
         <div class="carousel-item">
-            <img src="${image_directory}/50x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <img src="${image_directory}/50x.png" class="d-block w-100" loading="lazy">
             <div class="carousel-caption d-none d-md-block">
                 <h5>50x Image</h5>
             </div>
         </div>
 
         <div class="carousel-item">
-            <img src="${image_directory}/100x.png" class="d-block w-100" loading="lazy" data-bs-interval="flase">
+            <img src="${image_directory}/100x.png" class="d-block w-100" loading="lazy">
             <div class="carousel-caption d-none d-md-block">
                 <h5>100x Image</h5>
             </div>
         </div>
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel${
+          data_dict.flake_id
+        }" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carousel${data_dict.flake_id}" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel${
+          data_dict.flake_id
+        }" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
@@ -280,8 +280,8 @@ function createModal(data_dict) {
   </div>
 
   <div class="col-3 mx-auto text-center">
-    <img src="${image_directory}/overview_marked.jpg" class="img-thumbnail" loading="lazy"> 
-
+    <img style="width:95%" src="${image_directory}/overview_marked.jpg" class="img-thumbnail" loading="lazy">
+    <img style="width:95%" src="${image_directory}/eval_img.png" class="img-thumbnail" loading="lazy"> 
   </div>
 </div>
 `;
@@ -289,6 +289,21 @@ function createModal(data_dict) {
   //modal_body.append(overview)
   modal_body.append(gallery);
 
+  // buttons for exititng
+  var dismiss_button = $("<button>")
+    .attr({ type: "button", "data-bs-dismiss": "modal" })
+    .addClass("btn btn-secondary")
+    .text("Close");
+  var delete_button = $("<button>")
+    .attr({ type: "button", "data-bs-dismiss": "modal" })
+    .addClass("btn btn-danger")
+    .text("Delete")
+    .click({ id: data_dict.flake_id }, deleteHandler);
+  var download_button = $("<button>")
+    .attr("type", "button")
+    .addClass("btn btn-primary")
+    .text("Download as ZIP")
+    .click({ id: data_dict.flake_id }, downloadHandler);
   //footer Design
   modal_footer.append(delete_button);
   modal_footer.append(download_button);
