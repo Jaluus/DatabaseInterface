@@ -205,11 +205,17 @@ def Upload_scan_directory_to_db(
     with open(scan_meta_path) as f:
         scan_meta = json.load(f)
 
+    # Really Scuffed Extraction of Data
+    exfoliation_method = None
+    if "scan_exfoliation_method" in scan_meta["scan_exfoliation_method"].keys():
+        exfoliation_method = scan_meta["scan_exfoliation_method"]
+
     current_scan = scan(
         name=scan_meta["scan_name"],
         user=scan_meta["scan_user"],
         time=scan_meta["scan_time"],
         exfoliated_material=scan_meta["scan_exfoliated_material"],
+        exfoliation_method=exfoliation_method,
     )
 
     db.session.add(current_scan)

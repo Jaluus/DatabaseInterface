@@ -11,18 +11,20 @@ class scan(db.Model):
     user = db.Column("user", db.String(255), nullable=False)
     time = db.Column("time", db.BigInteger, nullable=False)
     exfoliated_material = db.Column("exfoliated_material", db.String(255))
-    exfoliated_method = db.Column("exfoliated_method", db.String(255))
+    exfoliation_method = db.Column("exfoliation_method", db.String(255))
 
     def to_dict(self):
         model_dict = dict(self.__dict__)
         del model_dict["_sa_instance_state"]
         return model_dict
 
-    def __init__(self, name, user, time, exfoliated_material):
+    def __init__(self, name, user, time, exfoliated_material, exfoliation_method=None):
         self.name = name
         self.user = user
         self.time = time
         self.exfoliated_material = exfoliated_material
+        if exfoliated_material is not None:
+            self.exfoliation_method = exfoliation_method
 
 
 class chip(db.Model):
