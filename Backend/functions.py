@@ -207,7 +207,7 @@ def Upload_scan_directory_to_db(
 
     # Really Scuffed Extraction of Data
     exfoliation_method = None
-    if "scan_exfoliation_method" in scan_meta["scan_exfoliation_method"].keys():
+    if "scan_exfoliation_method" in scan_meta.keys():
         exfoliation_method = scan_meta["scan_exfoliation_method"]
 
     current_scan = scan(

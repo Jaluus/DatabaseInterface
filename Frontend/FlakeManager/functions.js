@@ -281,7 +281,7 @@ function createModal(data_dict) {
 
   <div class="col-3 mx-auto text-center">
     <img style="width:95%" src="${image_directory}/overview_marked.jpg" class="img-thumbnail" loading="lazy">
-    <img style="width:95%" src="${image_directory}/eval_img.png" class="img-thumbnail" loading="lazy"> 
+    <img style="width:95%" src="${image_directory}/eval_img.png" onerror="this.src = '${image_directory}/eval_img.jpg'" class="img-thumbnail" loading="lazy"> 
   </div>
 </div>
 `;

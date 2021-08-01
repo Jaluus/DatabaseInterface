@@ -31,10 +31,17 @@ function updateQuickInspectModal() {
     } | current Magnification ${MAG_DICT[current_mag]}`
   );
 
-  $("#quick_inspect_eval").attr(
-    "src",
-    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.png`
-  );
+  $("#quick_inspect_eval")
+    .attr(
+      "src",
+      `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.jpg`
+    )
+    .on("error", function () {
+      $(this).attr(
+        "src",
+        `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.png`
+      );
+    });
 
   //Update every Table Row
   $("#flake_id").text(current_flakes[current_flake_index]?.flake_id);

@@ -11,7 +11,7 @@ from Database_tables import *
 from functions import *
 
 # Some Constants
-IMAGE_DIRECTORY = r"C:\Users\duden\Desktop\Mikroskop Bilder"
+IMAGE_DIRECTORY = r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder"
 
 KEYCHAIN = config()
 
@@ -31,6 +31,9 @@ app.config[
 ] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# 16 Gb max upload
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000 * 1000
+
 # init the APP With the Database
 db.app = app
 db.init_app(app)
@@ -47,13 +50,21 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def UPLOAD_FILES():
+    print("trying to upload...")
     try:
         file = request.files["zip"]
         if file.filename[-4:] != ".zip":
             return "wrong Filetype"
 
+        print(f"receiving {file.filename}...")
+
         file_path = os.path.join(IMAGE_DIRECTORY, file.filename)
+
+        print(f"saving to {file_path}")
+
         file.save(file_path)
+
+        print(f"File saved")
 
         with ZipFile(file_path, "r") as zipObj:
             zipObj.extractall(file_path[:-4])
@@ -109,7 +120,6 @@ def SCAN_GET():
     # here we want to get the value of user (i.e. ?user=some-value)
     query_dict = request.args
     scan_dict = get_scans(db, query_dict)
-    print(scan_dict)
     return jsonify(scan_dict)
 
 
@@ -142,6 +152,7 @@ if __name__ == "__main__":
     #     r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\Eikes_Flocken_Full_Final",
     # )
     # Upload_scan_directory_to_db(
-    #     db, r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\Luca_Scan_060721"
+    #     db, r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\graphene_taoufiq"
     # )
-    app.run(debug=True, host="0.0.0.0")
+    # app.run(debug=True, host="0.0.0.0")
+    pass
