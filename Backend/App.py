@@ -13,19 +13,20 @@ from functions import *
 # Some Constants
 IMAGE_DIRECTORY = r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder"
 
+# Get the Connection information from our file
 KEYCHAIN = config()
-
 USERNAME = KEYCHAIN["username"]
 PASSWORD = KEYCHAIN["password"]
 HOST = KEYCHAIN["host"]
 PORT = KEYCHAIN["port"]
 DATABASE = KEYCHAIN["database"]
 
-# # You need cors!!
+# Activate CORS to prevent errors
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
+# Set the connection URI
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
@@ -34,20 +35,21 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # 16 Gb max upload
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000 * 1000
 
-# init the APP With the Database
+# initialzie the app with the Database
 db.app = app
 db.init_app(app)
 
-# Create the Database if its not existante
+# Create the Database, if it is not existant
 db.create_all()
 
-
+# Define the default route
 @app.route("/")
 @cross_origin()
 def index():
-    return "Hello Dude"
+    return "Default Route, not set"
 
 
+# Define the the upload route, POST
 @app.route("/upload", methods=["POST"])
 def UPLOAD_FILES():
     print("trying to upload...")
@@ -76,6 +78,7 @@ def UPLOAD_FILES():
         return "Something went wrong!"
 
 
+# Return the flake metadata based on the filter arguments
 @app.route("/flakes", methods=["GET"])
 @cross_origin()
 def FLAKE_GET():
@@ -85,10 +88,12 @@ def FLAKE_GET():
     return jsonify(flake_dict)
 
 
+# Return the requested Flake based on the ID as a Zip file
+# Zip is being created in memory
+# TODO: Add a scalebar if requested by using OPENCV
 @app.route("/downloadFlake", methods=["GET"])
 @cross_origin()
 def FLAKE_DOWNLOAD():
-    # here we want to get the value of user (i.e. ?user=some-value)
     try:
         flake_id = int(request.args.get("flake_id"))
 
@@ -96,7 +101,7 @@ def FLAKE_DOWNLOAD():
         flake_dict = get_flakes(db, flake_query)[0]
         flake_dir = os.path.join(IMAGE_DIRECTORY, flake_dict["flake_path"])
 
-        # Keep the Zipfile only in Memory
+        # Create a ZIP-file in memory
         memory_file = BytesIO()
         with zipfile.ZipFile(memory_file, "w") as zf:
             for file_name in os.listdir(flake_dir):
@@ -114,6 +119,7 @@ def FLAKE_DOWNLOAD():
         return "Wrong Query, Please use $flake_id=[The needed Flake ID]"
 
 
+# Return the scan metadata
 @app.route("/scans", methods=["GET"])
 @cross_origin()
 def SCAN_GET():
@@ -123,6 +129,8 @@ def SCAN_GET():
     return jsonify(scan_dict)
 
 
+# Delete a flake based on the flake id
+# TODO: Delete the scan / Chip if no more Chips / Flakes are on the scan
 @app.route("/flakes", methods=["DELETE"])
 @cross_origin()
 def FLAKES_DELETE():
@@ -134,6 +142,8 @@ def FLAKES_DELETE():
         return "Invalid Key"
 
 
+# Delete every flake and chip within a certain scan
+# Also delete the Scan itself
 @app.route("/scans", methods=["DELETE"])
 @cross_origin()
 def SCAN_DELETE():
@@ -142,7 +152,7 @@ def SCAN_DELETE():
         delete_scan(db, IMAGE_DIRECTORY, scan_id)
         return "Deleted SCAN"
     except:
-        return "Invalid Key"
+        return "Invalid SCAN_ID"
 
 
 if __name__ == "__main__":
