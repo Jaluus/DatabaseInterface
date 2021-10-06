@@ -7,12 +7,18 @@ $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
 
-  if ($("#userInput").val() != "") currentFilter.scan_user = $("#userInput").val()
-  if ($("#sizeInput").val() != "") currentFilter.flake_size = $("#sizeInput").val()
-  if ($("#thicknessSelect").val() != "") currentFilter.flake_thickness = $("#thicknessSelect").val()
-  if ($("#materialSelect").val() != "") currentFilter.scan_exfoliated_material = $("#materialSelect").val()
-  if ($("#flakeIdInput").val() != "") currentFilter.flake_id = $("#flakeIdInput").val()
-  if ($("#queryLimit").val() != "") currentFilter.query_limit = $("#queryLimit").val()
+  if ($("#userInput").val() != "")
+    currentFilter.scan_user = $("#userInput").val();
+  if ($("#sizeInput").val() != "")
+    currentFilter.flake_size = $("#sizeInput").val();
+  if ($("#thicknessSelect").val() != "")
+    currentFilter.flake_thickness = $("#thicknessSelect").val();
+  if ($("#materialSelect").val() != "")
+    currentFilter.scan_exfoliated_material = $("#materialSelect").val();
+  if ($("#flakeIdInput").val() != "")
+    currentFilter.flake_id = $("#flakeIdInput").val();
+  if ($("#queryLimit").val() != "")
+    currentFilter.query_limit = $("#queryLimit").val();
 
   getDataFromServerAndDisplay(currentFilter);
 });
@@ -46,4 +52,3 @@ $(function () {
 
 //display the data
 getDataFromServerAndDisplay(currentFilter);
-

@@ -7,10 +7,15 @@ $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
 
-  if ($("#userInput").val() != "") currentFilter.scan_user = $("#userInput").val()
-  if ($("#nameInput").val() != "") currentFilter.scan_name = $("#sizeInput").val()
-  if ($("#materialSelect").val() != "") currentFilter.scan_exfoliated_material = $("#materialSelect").val()
-  if ($("#queryLimit").val() != "") currentFilter.query_limit = $("#queryLimit").val()
+  if ($("#scanID").val() != "") currentFilter.scan_id = $("#scanID").val();
+  if ($("#userInput").val() != "")
+    currentFilter.scan_user = $("#userInput").val();
+  if ($("#nameInput").val() != "")
+    currentFilter.scan_name = $("#sizeInput").val();
+  if ($("#materialSelect").val() != "")
+    currentFilter.scan_exfoliated_material = $("#materialSelect").val();
+  if ($("#queryLimit").val() != "")
+    currentFilter.query_limit = $("#queryLimit").val();
 
   getDataFromServerAndDisplay(currentFilter);
 });
@@ -44,4 +49,3 @@ $(function () {
 
 //display the data
 getDataFromServerAndDisplay(currentFilter);
-

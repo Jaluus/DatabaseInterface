@@ -400,7 +400,8 @@ function createQuickInspectModal() {
   return quickInspectModal;
 }
 
-function createViewModal(data_dict) {
+// The overview Modal
+function createOverviewModal(data_dict) {
   var modal_id = `modalview${data_dict.scan_id}`;
   var image_directory = `${IMAGE_URL}/${data_dict.scan_name}`;
 
@@ -461,6 +462,7 @@ function createViewModal(data_dict) {
   return view_modal;
 }
 
+// What did i do here?
 function createScanTable() {
   // What to add
   // Number Chips, Number Flakes, mono bi tri etc..
@@ -481,9 +483,10 @@ function getDataFromServerAndDisplay(filter) {
 
   // repopulate the table with data
   $.getJSON(query_url, function (data) {
-    $.each(data, function (key, value) {
+    // reverse the array to have the newest data first
+    $.each(data.reverse(), function (key, value) {
       var row = createTabelRow(value);
-      var view_modal = createViewModal(value);
+      var view_modal = createOverviewModal(value);
 
       // Append to to the table
       $("#flake_table > tbody").append(row);

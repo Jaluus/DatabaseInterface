@@ -45,7 +45,15 @@ def get_chip_directorys(scan_directory):
 
 
 def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
-    # get the current flake
+    """Removes every Image, flake and chip from the DB belonging to the Scan
+    Lastly removes the scan
+
+    Args:
+        db (SQLAlchemy): The database object
+        IMAGE_DIRECTORY (str): The directory where the images are saved
+        scan_id (int): The ID of the scan to be removed
+    """
+    # get the current scan
     current_scan = scan.query.get(scan_id)
 
     # gets the directory of the scan
@@ -53,13 +61,13 @@ def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
         IMAGE_DIRECTORY, current_scan.exfoliated_material, current_scan.name
     )
 
-    # Removes the Directory from the computer
+    # Removes the Directory and every subdirectory from the computer
     shutil.rmtree(scan_dir)
 
-    # removes the images froom the from the db
+    # removes the images from the from the db
     image.query.filter(image.flake_id == current_scan._id).delete()
 
-    # delete the Flake from the Database
+    # delete the scan from the Database
     db.session.delete(current_scan)
     db.session.commit()
 
@@ -74,7 +82,7 @@ def delete_flake(db: SQLAlchemy, IMAGE_DIRECTORY: str, flake_id: int):
     # Removes the Directory from the computer
     shutil.rmtree(flake_dir)
 
-    # removes the images froom the from the db
+    # removes the images from the from the db
     image.query.filter(image.flake_id == current_flake._id).delete()
 
     # delete the Flake from the Database
@@ -93,7 +101,7 @@ def get_scans(db: SQLAlchemy, query_dict: dict):
         }
 
         try:
-            SCAN_LIMIT = query_dict["flake_limit"]
+            SCAN_LIMIT = query_dict["query_limit"]
         except:
             SCAN_LIMIT = 100
 
@@ -154,7 +162,7 @@ def get_flakes(db: SQLAlchemy, query_dict: dict):
         if "query_limit" in query_dict:
             FLAKE_LIMIT = query_dict["query_limit"]
             if int(FLAKE_LIMIT) < 1:
-                FLAKE_LIMIT = 100000
+                FLAKE_LIMIT = 10000
         else:
             FLAKE_LIMIT = 100
 
