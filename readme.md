@@ -40,12 +40,12 @@ you need to create a Config file called `database.ini` which looks something lik
 
 ## TODO
 
-- [ ] Delete scans
+- [ ] Delete full scans
 - [ ] Download full scans
 - [ ] Display the image parameters in the frontend
 - [ ] Ability to download images with a scalebar
 - [x] Invert the sorting of the scans, newest first
-- [ ] Add Scan ID as a filter parameters, also change the filter type of layers
+- [x] Add Scan ID as a filter parameters, also change the filter type of layers
 - [ ] When deleting a flake in the flakeviewer open the next flake, dont fallback to the previous screen
   - Could be hard with the current implementation
 - [ ] Adding ability to mark flakes as used (modification of the database necessary)

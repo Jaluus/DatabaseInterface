@@ -484,7 +484,7 @@ function getDataFromServerAndDisplay(filter) {
   // repopulate the table with data
   $.getJSON(query_url, function (data) {
     // reverse the array to have the newest data first
-    $.each(data.reverse(), function (key, value) {
+    $.each(data, function (key, value) {
       var row = createTabelRow(value);
       var view_modal = createOverviewModal(value);
 

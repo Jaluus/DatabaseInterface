@@ -117,15 +117,20 @@ def get_scans(db: SQLAlchemy, query_dict: dict):
                 # case 2: The other ones are all exact Comparisons
                 querys.append(RETURNED_VALUES[key] == query_dict[key])
 
-        flakes = (
+        # First get all the Scans
+        # Then filter the Scans
+        # Then order the Scans
+        # Then limit the Scans
+        scans = (
             db.session.query(*RETURNED_VALUES.values())
             .filter(*querys)
+            .order_by(scan.time.desc())
             .limit(SCAN_LIMIT)
         )
 
         new_dict = [
-            {key: value for (key, value) in zip(RETURNED_VALUES.keys(), f)}
-            for f in flakes
+            {key: value for (key, value) in zip(RETURNED_VALUES.keys(), s)}
+            for s in scans
         ]
 
         return new_dict
