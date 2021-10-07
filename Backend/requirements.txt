@@ -5,3 +5,4 @@ flask_sqlalchemy
 pymysql
 waitress
 cryptography
+python-opencv

@@ -1,9 +1,51 @@
-from flask_sqlalchemy import SQLAlchemy
-from Database_tables import *
+import json
+import ntpath
 import os
 import re
 import shutil
-import json
+
+import cv2
+from flask_sqlalchemy import SQLAlchemy
+
+from Database_tables import *
+
+SCALE_LENGTH = {
+    "2.5x.png": ["1mm", 325],
+    "5x.png": ["500um", 325],
+    "20x.png": ["125um", 325],
+    "50x.png": ["50um", 325],
+    "100x.png": ["25um", 325],
+}
+
+
+def add_scalebar(file_path):
+
+    img = cv2.imread(file_path)
+    file_dir = os.path.dirname(file_path)
+    img_name = ntpath.basename(file_path)
+    img_scalebar_name = f"{img_name}_scalebar.png"
+    img_scalebar_path = os.path.join(file_dir, img_scalebar_name)
+
+    x1, y1 = 50, 50
+    x2, y2 = SCALE_LENGTH[img_name][1] + x1, 70
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    img = cv2.rectangle(img, (x1, y1), (x2, y2), (255, 255, 255), thickness=-1)
+
+    cv2.putText(
+        img,
+        SCALE_LENGTH[img_name][0],
+        (50, 120),
+        font,
+        2,
+        (255, 255, 255),
+        4,
+    )
+
+    cv2.imwrite(img_scalebar_path, img)
+
+    return img_scalebar_path
 
 
 def sorted_alphanumeric(data):

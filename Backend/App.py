@@ -21,6 +21,15 @@ HOST = KEYCHAIN["host"]
 PORT = KEYCHAIN["port"]
 DATABASE = KEYCHAIN["database"]
 
+# Define the Image names of the images to which the scalebar will be added
+SCALEBAR_IMAGE_NAMES = [
+    "2.5x.png",
+    "5x.png",
+    "20x.png",
+    "50x.png",
+    "100x.png",
+]
+
 # Activate CORS to prevent errors
 app = Flask(__name__)
 cors = CORS(app)
@@ -96,6 +105,7 @@ def FLAKE_GET():
 def FLAKE_DOWNLOAD():
     try:
         flake_id = int(request.args.get("flake_id"))
+        scalebar_download = request.args.get("scalebar")
 
         flake_query = {"flake_id": flake_id}
         flake_dict = get_flakes(db, flake_query)[0]
@@ -106,7 +116,17 @@ def FLAKE_DOWNLOAD():
         with zipfile.ZipFile(memory_file, "w") as zf:
             for file_name in os.listdir(flake_dir):
                 file_path = os.path.join(flake_dir, file_name)
-                zf.write(file_path, file_name)
+
+                if file_name in SCALEBAR_IMAGE_NAMES and scalebar_download is not None:
+                    try:
+                        # create the scalebar image and add it to the zip, remove it afterwards
+                        scale_bar_path = add_scalebar(file_path)
+                        zf.write(scale_bar_path, file_name)
+                        os.remove(scale_bar_path)
+                    except:
+                        zf.write(file_path, file_name)
+                else:
+                    zf.write(file_path, file_name)
         memory_file.seek(0)
 
         return send_file(
