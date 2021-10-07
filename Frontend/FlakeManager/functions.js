@@ -23,6 +23,13 @@ function downloadHandler(event) {
   window.location = `${BACKEND_URL}/downloadFlake?flake_id=${flake_id}`;
 }
 
+function downloadScalebarHandler(event) {
+  var flake_id = event.data.id;
+
+  // Quick and Dirty way to download the File from my server
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${flake_id}`;
+}
+
 function createTabelRow(data_dict) {
   //modalID
   var modal_id = `modalview${data_dict.flake_id}`;
@@ -299,14 +306,20 @@ function createModal(data_dict) {
     .addClass("btn btn-danger")
     .text("Delete")
     .click({ id: data_dict.flake_id }, deleteHandler);
+  var download_scalebar_button = $("<button>")
+    .attr("type", "button")
+    .addClass("btn btn-primary")
+    .text("Download w/ Scalebar")
+    .click({ id: data_dict.flake_id }, downloadScalebarHandler);
   var download_button = $("<button>")
     .attr("type", "button")
     .addClass("btn btn-primary")
-    .text("Download as ZIP")
+    .text("Download")
     .click({ id: data_dict.flake_id }, downloadHandler);
   //footer Design
   modal_footer.append(delete_button);
   modal_footer.append(download_button);
+  modal_footer.append(download_scalebar_button);
   modal_footer.append(dismiss_button);
 
   // build the final modal

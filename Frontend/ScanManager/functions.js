@@ -122,6 +122,11 @@ function downloadCurrentFlake(event) {
   window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
 }
 
+function downloadCurrentFlakeWithScalebar(event) {
+  // Quick and Dirty way to download the File from my server
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
+}
+
 function quickViewHandler(event) {
   current_scan_data = event.data.scan_data;
   let query_url =
@@ -348,12 +353,18 @@ function createQuickInspectModal() {
   var download_button = $("<button>")
     .attr("type", "button")
     .addClass("btn btn-primary")
-    .text("Download as ZIP")
+    .text("Download")
     .click(downloadCurrentFlake);
+  var download_scalebar_button = $("<button>")
+    .attr("type", "button")
+    .addClass("btn btn-primary")
+    .text("Download with Scalebar")
+    .click(downloadCurrentFlakeWithScalebar);
 
   //footer Design
   modal_footer.append(delete_button);
   modal_footer.append(download_button);
+  modal_footer.append(download_scalebar_button);
   modal_footer.append(dismiss_button);
 
   // build the final modal
@@ -449,7 +460,7 @@ function createOverviewModal(data_dict) {
 
   //footer Design
   modal_footer.append(delete_button);
-  modal_footer.append(download_button);
+  //modal_footer.append(download_button);
   modal_footer.append(dismiss_button);
 
   // build the final modal
