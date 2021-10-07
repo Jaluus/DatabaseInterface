@@ -10,7 +10,7 @@
 4. Open the CMD __*with*__ admin rights
 5. Run `cd C:\Apache24\bin httpd -k install` to install the service and allow all communication
 6. Open the `C:\Apache24\conf\httpd.conf` file and insert
- 
+
         Alias /images "C:/path/to/your/images"
         <Directory "C:/path/to/your/images">
             Options Indexes
@@ -40,12 +40,13 @@ you need to create a Config file called `database.ini` which looks something lik
 
 ## TODO
 
-- [ ] Delete full scans
-- [ ] Download full scans
-- [ ] Display the image parameters in the frontend
+- [x] Delete full scans
 - [ ] Ability to download images with a scalebar
+- [ ] Download full scans
+- [ ] Delete Local Scans after Uploading 
 - [x] Invert the sorting of the scans, newest first
 - [x] Add Scan ID as a filter parameters, also change the filter type of layers
+- [ ] Display the image parameters in the frontend
 - [ ] When deleting a flake in the flakeviewer open the next flake, dont fallback to the previous screen
   - Could be hard with the current implementation
 - [ ] Adding ability to mark flakes as used (modification of the database necessary)

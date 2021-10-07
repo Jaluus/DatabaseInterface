@@ -61,15 +61,33 @@ def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
         IMAGE_DIRECTORY, current_scan.exfoliated_material, current_scan.name
     )
 
+    # Get all the chips belonging to the scan
+    chips = chip.query.filter(chip.scan_id == current_scan._id).all()
+
+    for chip_obj in chips:
+
+        # Get all the flakes belonging to the scan
+        flakes = flake.query.filter(chip_obj._id == flake.chip_id).all()
+
+        for flake_obj in flakes:
+
+            # get and delete the images
+            image.query.filter(flake_obj._id == image.flake_id).delete()
+
+        # Delete the Flake
+        flakes = flake.query.filter(chip_obj._id == flake.chip_id).delete()
+
+    # Delete the Chip
+    chip.query.filter(chip.scan_id == current_scan._id).delete()
+
+    # Delete The current Scan
+    db.session.delete(current_scan)
+
+    # Commit the Changes
+    db.session.commit()
+
     # Removes the Directory and every subdirectory from the computer
     shutil.rmtree(scan_dir)
-
-    # removes the images from the from the db
-    image.query.filter(image.flake_id == current_scan._id).delete()
-
-    # delete the scan from the Database
-    db.session.delete(current_scan)
-    db.session.commit()
 
 
 def delete_flake(db: SQLAlchemy, IMAGE_DIRECTORY: str, flake_id: int):

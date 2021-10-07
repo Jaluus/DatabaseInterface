@@ -149,10 +149,12 @@ def FLAKES_DELETE():
 def SCAN_DELETE():
     try:
         scan_id = int(request.args.get("scan_id"))
+        print(f"Deleting Scan {scan_id}")
         delete_scan(db, IMAGE_DIRECTORY, scan_id)
         return "Deleted SCAN"
     except:
-        return "Invalid SCAN_ID"
+        print("Unexpected error:", sys.exc_info()[0])
+        return "Unexpected error, Maybe scan id not present?"
 
 
 if __name__ == "__main__":
@@ -164,5 +166,4 @@ if __name__ == "__main__":
     # Upload_scan_directory_to_db(
     #     db, r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\graphene_taoufiq"
     # )
-    # app.run(debug=True, host="0.0.0.0")
-    pass
+    app.run(debug=True, host="0.0.0.0")
