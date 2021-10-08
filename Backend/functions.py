@@ -98,9 +98,7 @@ def get_unique_materials(db: SQLAlchemy):
 
 
 def get_unique_users(db: SQLAlchemy):
-    return np.array(db.session.query(scan.user).distinct().all())[
-        :, 0
-    ].tolist()
+    return np.array(db.session.query(scan.user).distinct().all())[:, 0].tolist()
 
 
 def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
@@ -116,9 +114,7 @@ def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
     current_scan = scan.query.get(scan_id)
 
     # gets the directory of the scan
-    scan_dir = os.path.join(
-        IMAGE_DIRECTORY, current_scan.exfoliated_material, current_scan.name
-    )
+    scan_dir = os.path.join(IMAGE_DIRECTORY, current_scan.name)
 
     # Get all the chips belonging to the scan
     chips = chip.query.filter(chip.scan_id == current_scan._id).all()
@@ -146,6 +142,7 @@ def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):
     db.session.commit()
 
     # Removes the Directory and every subdirectory from the computer
+    print(f"Removing {scan_dir}")
     shutil.rmtree(scan_dir)
 
 
