@@ -1,4 +1,4 @@
-import { getDataFromServerAndDisplay } from "./functions.js";
+import { getDataFromServerAndDisplay, build_select_menu } from "./functions.js";
 
 var currentFilter = {};
 
@@ -52,3 +52,6 @@ $(function () {
 
 //display the data
 getDataFromServerAndDisplay(currentFilter);
+
+// Build the select filter menu
+build_select_menu();

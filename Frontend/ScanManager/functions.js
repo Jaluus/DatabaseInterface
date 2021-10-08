@@ -481,13 +481,13 @@ function createScanTable() {
   var table = $("<table>");
 }
 
-function getDataFromServerAndDisplay(filter) {
+function build_select_menu() {
   let filter_material_URL = BACKEND_URL + "/materials";
   let Users_URL = BACKEND_URL + "/users";
 
   // Clear the Selects
-  $("#materialSelect").empty().append('<option selected value="">Any</option>');
-  $("#userSelect").empty().append('<option selected value="">Any</option>');
+  //$("#materialSelect").empty().append('<option selected value="">Any</option>');
+  //$("#userSelect").empty().append('<option selected value="">Any</option>');
 
   // Get all unique Materials form the database
   $.getJSON(filter_material_URL, function (data) {
@@ -512,7 +512,9 @@ function getDataFromServerAndDisplay(filter) {
       );
     });
   });
+}
 
+function getDataFromServerAndDisplay(filter) {
   // Clear the Table first
   $("#flake_table > tbody").empty();
 
@@ -541,4 +543,4 @@ function getDataFromServerAndDisplay(filter) {
   $("body").append(quick_inspect_modal);
 }
 
-export { getDataFromServerAndDisplay };
+export { getDataFromServerAndDisplay, build_select_menu };

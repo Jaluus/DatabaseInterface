@@ -332,17 +332,17 @@ function createModal(data_dict) {
   return view_modal;
 }
 
-function getDataFromServerAndDisplay(filter) {
+function build_select_menu() {
   let filter_thickness_URL = BACKEND_URL + "/thicknesses";
   let filter_material_URL = BACKEND_URL + "/materials";
   let Users_URL = BACKEND_URL + "/users";
 
   // Clear the Selects
-  $("#materialSelect").empty().append('<option selected value="">Any</option>');
-  $("#userSelect").empty().append('<option selected value="">Any</option>');
-  $("#thicknessSelect")
-    .empty()
-    .append('<option selected value="">Any</option>');
+  //$("#materialSelect").empty().append('<option selected value="">Any</option>');
+  //$("#userSelect").empty().append('<option selected value="">Any</option>');
+  // $("#thicknessSelect")
+  //   .empty()
+  //   .append('<option selected value="">Any</option>');
 
   // Get all unique thicknesses form the database
   $.getJSON(filter_thickness_URL, function (data) {
@@ -379,7 +379,9 @@ function getDataFromServerAndDisplay(filter) {
       );
     });
   });
+}
 
+function getDataFromServerAndDisplay(filter) {
   // Clear the Table first
   $("#flake_table > tbody").empty();
 
@@ -403,4 +405,4 @@ function getDataFromServerAndDisplay(filter) {
   });
 }
 
-export { getDataFromServerAndDisplay };
+export { getDataFromServerAndDisplay, build_select_menu };
