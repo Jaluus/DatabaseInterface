@@ -140,12 +140,14 @@ def FLAKE_DOWNLOAD():
                 file_path = os.path.join(flake_dir, file_name)
 
                 if file_name in SCALEBAR_IMAGE_NAMES and scalebar_download is not None:
+                    print("trying Scalebar download")
                     try:
                         # create the scalebar image and add it to the zip, remove it afterwards
                         scale_bar_path = add_scalebar(file_path)
                         zf.write(scale_bar_path, file_name)
                         os.remove(scale_bar_path)
                     except:
+                        print("Unexpected error:", sys.exc_info()[0])
                         zf.write(file_path, file_name)
                 else:
                     zf.write(file_path, file_name)

@@ -27,7 +27,7 @@ function downloadScalebarHandler(event) {
   var flake_id = event.data.id;
 
   // Quick and Dirty way to download the File from my server
-  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${flake_id}`;
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${flake_id}&scalebar=1`;
 }
 
 function createTabelRow(data_dict) {

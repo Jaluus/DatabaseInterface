@@ -124,7 +124,7 @@ function downloadCurrentFlake(event) {
 
 function downloadCurrentFlakeWithScalebar(event) {
   // Quick and Dirty way to download the File from my server
-  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}&scalebar=1`;
 }
 
 function quickViewHandler(event) {
