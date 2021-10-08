@@ -7,8 +7,8 @@ $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
 
-  if ($("#userInput").val() != "")
-    currentFilter.scan_user = $("#userInput").val();
+  if ($("#userSelect").val() != "")
+    currentFilter.scan_user = $("#userSelect").val();
   if ($("#sizeInput").val() != "")
     currentFilter.flake_size = $("#sizeInput").val();
   if ($("#thicknessSelect").val() != "")

@@ -333,6 +333,53 @@ function createModal(data_dict) {
 }
 
 function getDataFromServerAndDisplay(filter) {
+  let filter_thickness_URL = BACKEND_URL + "/thicknesses";
+  let filter_material_URL = BACKEND_URL + "/materials";
+  let Users_URL = BACKEND_URL + "/users";
+
+  // Clear the Selects
+  $("#materialSelect").empty().append('<option selected value="">Any</option>');
+  $("#userSelect").empty().append('<option selected value="">Any</option>');
+  $("#thicknessSelect")
+    .empty()
+    .append('<option selected value="">Any</option>');
+
+  // Get all unique thicknesses form the database
+  $.getJSON(filter_thickness_URL, function (data) {
+    data.forEach(function (thickness) {
+      $("#thicknessSelect").append(
+        $("<option>", {
+          value: thickness,
+          text: thickness,
+        })
+      );
+    });
+  });
+
+  // Get all unique Materials form the database
+  $.getJSON(filter_material_URL, function (data) {
+    data.forEach(function (materials) {
+      $("#materialSelect").append(
+        $("<option>", {
+          value: materials,
+          text: materials,
+        })
+      );
+    });
+  });
+
+  // Get all unique Materials form the database
+  $.getJSON(Users_URL, function (data) {
+    data.forEach(function (users) {
+      $("#userSelect").append(
+        $("<option>", {
+          value: users,
+          text: users,
+        })
+      );
+    });
+  });
+
   // Clear the Table first
   $("#flake_table > tbody").empty();
 

@@ -99,10 +99,11 @@
                         <!-- user Selector -->
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">User</span>
+                                <label class="input-group-text" for="userSelect">User</label>
                             </div>
-                            <input type="text" class="form-control" id="userInput" placeholder="Jan" aria-label="user"
-                                aria-describedby="basic-addon1">
+                            <select class="form-select" id="userSelect">
+                                <option selected value="">Any</option>
+                            </select>
                         </div>
                         <!-- ID Selector -->
                         <div class="input-group mb-3">
@@ -138,31 +139,16 @@
                             </div>
                             <select class="form-select" id="materialSelect">
                                 <option selected value="">Any</option>
-                                <option>WSe2</option>
-                                <option>WS2</option>
-                                <option>WTe2</option>
-                                <option>Graphene</option>
-                                <option>hBN</option>
                             </select>
                         </div>
                         <!-- Layer Selector -->
-                        <!-- <div class="input-group mb-3">
+                        <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="thicknessSelect">Thickness</label>
                             </div>
                             <select class="form-select" id="thicknessSelect">
                                 <option selected value="">Any</option>
-                                <option value="monolayer">Monolayer</option>
-                                <option value="bilayer">Bilayer</option>
-                                <option value="trilayer">Trilayer</option>
                             </select>
-                        </div> -->
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Thickness</span>
-                            </div>
-                            <input type="text" class="form-control" id="thicknessSelect" placeholder="monolayer" aria-label="user"
-                                aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="modal-footer">

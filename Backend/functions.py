@@ -3,6 +3,7 @@ import ntpath
 import os
 import re
 import shutil
+import numpy as np
 
 import cv2
 from flask_sqlalchemy import SQLAlchemy
@@ -84,6 +85,22 @@ def get_chip_directorys(scan_directory):
         chip_directory = os.path.join(scan_directory, chip_directory_name)
 
         yield chip_directory
+
+
+def get_unique_thicknesses(db: SQLAlchemy):
+    return np.array(db.session.query(flake.thickness).distinct().all())[:, 0].tolist()
+
+
+def get_unique_materials(db: SQLAlchemy):
+    return np.array(db.session.query(scan.exfoliated_material).distinct().all())[
+        :, 0
+    ].tolist()
+
+
+def get_unique_users(db: SQLAlchemy):
+    return np.array(db.session.query(scan.user).distinct().all())[
+        :, 0
+    ].tolist()
 
 
 def delete_scan(db: SQLAlchemy, IMAGE_DIRECTORY: str, scan_id: int):

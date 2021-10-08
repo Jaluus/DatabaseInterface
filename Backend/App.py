@@ -97,6 +97,28 @@ def FLAKE_GET():
     return jsonify(flake_dict)
 
 
+@app.route("/thicknesses", methods=["GET"])
+@cross_origin()
+def FLAKE_THICKNESSES_GET():
+    unique_thicknesses = get_unique_thicknesses(db)
+    print(unique_thicknesses)
+    return jsonify(unique_thicknesses)
+
+
+@app.route("/materials", methods=["GET"])
+@cross_origin()
+def FLAKE_MATERIALS_GET():
+    unique_materials = get_unique_materials(db)
+    return jsonify(unique_materials)
+
+
+@app.route("/users", methods=["GET"])
+@cross_origin()
+def USERS_GET():
+    unique_users = get_unique_users(db)
+    return jsonify(unique_users)
+
+
 # Return the requested Flake based on the ID as a Zip file
 # Zip is being created in memory
 # TODO: Add a scalebar if requested by using OPENCV
