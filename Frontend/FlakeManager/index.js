@@ -7,6 +7,7 @@ $("#filter_button").click(function (event) {
   currentFilter = {};
   // getting the current status of the filter, set it to -1 if its not selected
 
+  if ($("#scanID").val() != "") currentFilter.scan_id = $("#scanID").val();
   if ($("#userSelect").val() != "")
     currentFilter.scan_user = $("#userSelect").val();
   if ($("#sizeInput").val() != "")
