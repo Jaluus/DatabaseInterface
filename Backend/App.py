@@ -2,6 +2,7 @@ import sys
 import zipfile
 from io import BytesIO
 from zipfile import ZipFile
+import csv
 
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
@@ -101,7 +102,6 @@ def FLAKE_GET():
 @cross_origin()
 def FLAKE_THICKNESSES_GET():
     unique_thicknesses = get_unique_thicknesses(db)
-    print(unique_thicknesses)
     return jsonify(unique_thicknesses)
 
 
@@ -117,6 +117,42 @@ def FLAKE_MATERIALS_GET():
 def USERS_GET():
     unique_users = get_unique_users(db)
     return jsonify(unique_users)
+
+
+@app.route("/scanmeta", methods=["GET"])
+@cross_origin()
+def SCANMETA_GET():
+    """Downloads the metadata of a specific scan"""
+
+    try:
+        scan_id = int(request.args.get("scan_id"))
+    except TypeError:
+        return "scan_id must be given"
+    except ValueError:
+        return "scan_id must be an integer"
+
+    records, keys = get_scan_metadata(db, scan_id)
+
+    if len(records) == 0:
+        return "No records found"
+
+    # # Remove Unneccessary Key
+    # for record in records:
+    #     del record.__dict__["_sa_instance_state"]
+
+    with open("scan_meta_temp.csv", "w", newline="") as outfile:
+        outcsv = csv.writer(outfile)
+        outcsv.writerow([value for value in keys])
+        for record in records:
+            outcsv.writerow([value for value in record])
+
+    f = open("scan_meta_temp.csv", "rb")
+    return send_file(
+        f,
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name=f"scan_meta_{scan_id:.0f}.csv",
+    )
 
 
 # Return the requested Flake based on the ID as a Zip file

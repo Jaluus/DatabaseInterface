@@ -117,6 +117,11 @@ function deleteHandler(event) {
   }
 }
 
+function meta_download_handler(event) {
+  var scan_id = event.data.id;
+  window.location = `${BACKEND_URL}/scanmeta?scan_id=${scan_id}`;
+}
+
 function downloadCurrentFlake(event) {
   // Quick and Dirty way to download the File from my server
   window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
@@ -170,6 +175,13 @@ function createTabelRow(data_dict) {
     .addClass("btn btn-primary btn-xs")
     .text("View")
     .attr("id", `view_button${data_dict.scan_id}`);
+
+  var meta_download_button = $("<a>")
+    .addClass("btn btn-info btn-xs")
+    .text("Meta DL")
+    .attr("id", `meta_dl${data_dict.scan_id}`)
+    .click({ id: data_dict.scan_id }, meta_download_handler);
+
   var quickview_button = $("<a>")
     .addClass("btn btn-warning btn-xs")
     .attr("data-bs-toggle", "modal")
@@ -185,6 +197,7 @@ function createTabelRow(data_dict) {
 
   //append the buttons to the button cell
   button_div.append(view_button);
+  button_div.append(meta_download_button);
   button_div.append(quickview_button);
   button_div.append(delete_button);
 

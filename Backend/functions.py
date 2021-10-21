@@ -88,6 +88,7 @@ def get_chip_directorys(scan_directory):
 
 
 def get_unique_thicknesses(db: SQLAlchemy):
+    # The [:,0] is to get the first column of the array and not the empty ones
     return np.array(db.session.query(flake.thickness).distinct().all())[:, 0].tolist()
 
 
@@ -95,6 +96,42 @@ def get_unique_materials(db: SQLAlchemy):
     return np.array(db.session.query(scan.exfoliated_material).distinct().all())[
         :, 0
     ].tolist()
+
+
+def get_scan_metadata(db: SQLAlchemy, scan_id: int):
+
+    RETURNED_VALUES = {
+        "flake_id": flake._id,
+        "flake_size": flake.size,
+        "flake_thickness": flake.thickness,
+        "flake_used": flake.used,
+        "flake_height": flake.height,
+        "flake_width": flake.width,
+        "flake_aspect_ratio": flake.aspect_ratio,
+        "flake_entropy": flake.entropy,
+        "flake_position_x": flake.position_x,
+        "flake_position_y": flake.position_y,
+        "flake_mean_contrast_r": flake.mean_contrast_r,
+        "flake_mean_contrast_g": flake.mean_contrast_g,
+        "flake_mean_contrast_b": flake.mean_contrast_b,
+        "flake_proximity_stddev": flake.proximity_stddev,
+        "chip_id": chip._id,
+        "chip_thickness": chip.chip_thickness,
+        "scan_id": scan._id,
+        "scan_name": scan.name,
+        "scan_user": scan.user,
+        "scan_exfoliated_material": scan.exfoliated_material,
+        "scan_time": scan.time,
+        "scan_exfoliation_method": scan.exfoliation_method,
+    }
+
+    flakes = (
+        db.session.query(*RETURNED_VALUES.values())
+        .join(chip, chip._id == flake.chip_id)
+        .join(scan, scan._id == chip.scan_id)
+        .filter(scan._id == scan_id)
+    )
+    return flakes.all(), RETURNED_VALUES.keys()
 
 
 def get_unique_users(db: SQLAlchemy):
