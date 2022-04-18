@@ -3,6 +3,9 @@ import { BACKEND_URL, IMAGE_URL } from "../constants.js";
 // Saving the Current State
 var current_scan_data = undefined;
 var current_flakes = [];
+var current_filtered_flakes = [];
+var current_thicknesses = []; // all the thicknesses in the current scan
+var current_selected_thickness = "All";
 var current_flake_index = 0;
 var current_mag = 1;
 const MAG_DICT = {
@@ -13,82 +16,111 @@ const MAG_DICT = {
   5: "100x",
 };
 
+function applyQuickInspectFilter() {
+  // get the current filter
+  let filter_value = $("#modalThicknessSelect").val();
+  current_selected_thickness = filter_value;
+
+  if (filter_value == "All") {
+    current_filtered_flakes = current_flakes;
+  } else {
+    current_filtered_flakes = current_flakes.filter(
+      (flake) => flake.flake_thickness == current_selected_thickness
+    );
+  }
+  // update the index
+  current_flake_index = 0;
+  // update the modal
+  $("#modalThicknessSelect").blur();
+  updateQuickInspectModal();
+}
+
 function updateQuickInspectModal() {
   // swap the Image and the heading
   $("#quick_inspect_image").attr(
     "src",
-    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/${MAG_DICT[current_mag]}.png`
+    `${IMAGE_URL}/${current_filtered_flakes[current_flake_index]?.flake_path}/${MAG_DICT[current_mag]}.png`
   );
   $("#quick_inspect_overview").attr(
     "src",
-    `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/overview_marked.jpg`
+    `${IMAGE_URL}/${current_filtered_flakes[current_flake_index]?.flake_path}/overview_marked.jpg`
   );
   $("#quick_inspect_heading").text(
     `Currently inspecting "${current_scan_data?.scan_name}" | Flake ID : ${
-      current_flakes[current_flake_index]?.flake_id
+      current_filtered_flakes[current_flake_index]?.flake_id
     } | Current Flake ${current_flake_index + 1} / ${
-      current_flakes.length
+      current_filtered_flakes.length
     } | current Magnification ${MAG_DICT[current_mag]}`
   );
 
+  // fall back if the jpg image is not found
   $("#quick_inspect_eval")
     .attr(
       "src",
-      `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.jpg`
+      `${IMAGE_URL}/${current_filtered_flakes[current_flake_index]?.flake_path}/eval_img.jpg`
     )
     .on("error", function () {
       $(this).attr(
         "src",
-        `${IMAGE_URL}/${current_flakes[current_flake_index]?.flake_path}/eval_img.png`
+        `${IMAGE_URL}/${current_filtered_flakes[current_flake_index]?.flake_path}/eval_img.png`
       );
     });
 
   //Update every Table Row
-  $("#flake_id").text(current_flakes[current_flake_index]?.flake_id);
+  $("#flake_id").text(current_filtered_flakes[current_flake_index]?.flake_id);
   $("#flake_thickness").text(
-    current_flakes[current_flake_index]?.flake_thickness
+    current_filtered_flakes[current_flake_index]?.flake_thickness
   );
-  $("#flake_used").text(current_flakes[current_flake_index]?.flake_used);
+  $("#flake_used").text(
+    current_filtered_flakes[current_flake_index]?.flake_used
+  );
   $("#scan_exfoliated_material").text(
-    current_flakes[current_flake_index]?.scan_exfoliated_material
+    current_filtered_flakes[current_flake_index]?.scan_exfoliated_material
   );
   $("#flake_size").text(
-    Math.round(current_flakes[current_flake_index]?.flake_size) + " μm²"
+    Math.round(current_filtered_flakes[current_flake_index]?.flake_size) +
+      " μm²"
   );
   $("#flake_width").text(
-    Math.round(current_flakes[current_flake_index]?.flake_width) + " μm"
+    Math.round(current_filtered_flakes[current_flake_index]?.flake_width) +
+      " μm"
   );
   $("#flake_height").text(
-    Math.round(current_flakes[current_flake_index]?.flake_height) + " μm"
+    Math.round(current_filtered_flakes[current_flake_index]?.flake_height) +
+      " μm"
   );
   $("#flake_aspect_ratio").text(
-    current_flakes[current_flake_index]?.flake_aspect_ratio
+    current_filtered_flakes[current_flake_index]?.flake_aspect_ratio
   );
-  $("#flake_entropy").text(current_flakes[current_flake_index]?.flake_entropy);
-  $("#chip_id").text(current_flakes[current_flake_index]?.chip_id);
+  $("#flake_entropy").text(
+    current_filtered_flakes[current_flake_index]?.flake_entropy
+  );
+  $("#chip_id").text(current_filtered_flakes[current_flake_index]?.chip_id);
   $("#chip_thickness").text(
-    current_flakes[current_flake_index]?.chip_thickness
+    current_filtered_flakes[current_flake_index]?.chip_thickness
   );
-  $("#chip_used").text(current_flakes[current_flake_index]?.chip_used);
-  $("#scan_id").text(current_flakes[current_flake_index]?.scan_id);
-  $("#scan_name").text(current_flakes[current_flake_index]?.scan_name);
-  $("#scan_user").text(current_flakes[current_flake_index]?.scan_user);
-  $("#scan_time").text(current_flakes[current_flake_index]?.scan_time);
+  $("#chip_used").text(current_filtered_flakes[current_flake_index]?.chip_used);
+  $("#scan_id").text(current_filtered_flakes[current_flake_index]?.scan_id);
+  $("#scan_name").text(current_filtered_flakes[current_flake_index]?.scan_name);
+  $("#scan_user").text(current_filtered_flakes[current_flake_index]?.scan_user);
+  $("#scan_time").text(current_filtered_flakes[current_flake_index]?.scan_time);
   $("#scan_exfoliation_method").text(
-    current_flakes[current_flake_index]?.scan_exfoliation_method
+    current_filtered_flakes[current_flake_index]?.scan_exfoliation_method
   );
 }
 
 function deleteCurrentFlake() {
   if (
-    confirm(`Delete Flake ${current_flakes[current_flake_index]?.flake_id}?`)
+    confirm(
+      `Delete Flake ${current_filtered_flakes[current_flake_index]?.flake_id}?`
+    )
   ) {
     $.ajax({
-      url: `${BACKEND_URL}/flakes?flake_id=${current_flakes[current_flake_index]?.flake_id}`,
+      url: `${BACKEND_URL}/flakes?flake_id=${current_filtered_flakes[current_flake_index]?.flake_id}`,
       type: "DELETE",
       success: function (result) {
         //removes the Flake from the Array
-        current_flakes.splice(current_flake_index, 1);
+        current_filtered_flakes.splice(current_flake_index, 1);
         updateQuickInspectModal();
       },
     });
@@ -124,12 +156,43 @@ function meta_download_handler(event) {
 
 function downloadCurrentFlake(event) {
   // Quick and Dirty way to download the File from my server
-  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}`;
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_filtered_flakes[current_flake_index]?.flake_id}`;
 }
 
 function downloadCurrentFlakeWithScalebar(event) {
   // Quick and Dirty way to download the File from my server
-  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_flakes[current_flake_index]?.flake_id}&scalebar=1`;
+  window.location = `${BACKEND_URL}/downloadFlake?flake_id=${current_filtered_flakes[current_flake_index]?.flake_id}&scalebar=1`;
+}
+
+function onlyUnique(value, index, self) {
+  // filters out duplicates from an array
+  return self.indexOf(value) === index;
+}
+
+function extractThicknesses(data) {
+  // extracts the thicknesses from the data
+  let thicknesses = [];
+  for (let i = 0; i < data.length; i++) {
+    thicknesses.push(data[i].flake_thickness);
+  }
+  let uniqueThicknesses = thicknesses.filter(onlyUnique);
+  return uniqueThicknesses;
+}
+
+function updateQuickInspectFilter() {
+  // update the filter dropdown
+  current_selected_thickness = "All";
+  $("#modalThicknessSelect").empty();
+  // append the ALL option
+  $("#modalThicknessSelect").append(`<option value="All">All</option>`);
+
+  for (let i = 0; i < current_thicknesses.length; i++) {
+    $("#modalThicknessSelect").append(
+      `<option value="${current_thicknesses[i]}">${current_thicknesses[i]}</option>`
+    );
+  }
+  // select the current filter
+  $("#modalThicknessSelect").val(current_selected_thickness);
 }
 
 function quickViewHandler(event) {
@@ -140,9 +203,12 @@ function quickViewHandler(event) {
   // Query the DB for the Flakes belonging to the Scan
   $.getJSON(query_url, function (data) {
     // set the state of the App
+    current_filtered_flakes = data;
     current_flakes = data;
+    current_thicknesses = extractThicknesses(current_flakes);
     current_flake_index = 0;
     current_mag = 1;
+    updateQuickInspectFilter();
     updateQuickInspectModal();
   });
 }
@@ -223,6 +289,7 @@ function createQuickInspectModal() {
   var modal_dialog = $("<div>").addClass("modal-dialog modal-fullscreen");
   var modal_content = $("<div>").addClass("modal-content");
   var modal_header = $("<div>").addClass("modal-header");
+  var modal_filter = $("<div>").addClass("modal-header");
   var modal_body = $("<div>").addClass("modal-body");
   var modal_footer = $("<div>").addClass("modal-footer");
 
@@ -231,6 +298,24 @@ function createQuickInspectModal() {
     .attr("id", "quick_inspect_heading")
     .addClass("modal-title");
   modal_header.append(heading);
+
+  // filter design
+  var filter = $("<div>").addClass("input-group");
+  var filter_label = $("<div>").addClass("input-group-prepend");
+  filter_label.append(
+    $("<label>")
+      .addClass("input-group-text")
+      .attr("for", "modalThicknessSelect")
+      .text("Thickness")
+  );
+  var filter_select = $("<select>")
+    .addClass("form-select")
+    .attr("id", "modalThicknessSelect")
+    .change(applyQuickInspectFilter);
+  filter.append(filter_label);
+  filter.append(filter_select);
+
+  modal_filter.append(filter);
 
   //body design
 
@@ -382,6 +467,7 @@ function createQuickInspectModal() {
 
   // build the final modal
   modal_content.append(modal_header);
+  modal_content.append(modal_filter);
   modal_content.append(modal_body);
   modal_content.append(modal_footer);
   modal_dialog.append(modal_content);
@@ -415,7 +501,7 @@ function createQuickInspectModal() {
     // clamping the Values
     current_flake_index = Math.min(
       Math.max(current_flake_index, 0),
-      current_flakes.length - 1
+      current_filtered_flakes.length - 1
     );
     current_mag = Math.min(Math.max(current_mag, 1), 5);
 
@@ -484,14 +570,6 @@ function createOverviewModal(data_dict) {
   view_modal.append(modal_dialog);
 
   return view_modal;
-}
-
-// What did i do here?
-function createScanTable() {
-  // What to add
-  // Number Chips, Number Flakes, mono bi tri etc..
-  // User, name, Material, time
-  var table = $("<table>");
 }
 
 function build_select_menu() {

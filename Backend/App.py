@@ -161,9 +161,13 @@ def SCANMETA_GET():
 @app.route("/downloadFlake", methods=["GET"])
 @cross_origin()
 def FLAKE_DOWNLOAD():
+    print("trying to download...")
     try:
         flake_id = int(request.args.get("flake_id"))
         scalebar_download = request.args.get("scalebar")
+
+        print(f"requesting {flake_id}...")
+        print(f"scalebar: {scalebar_download}")
 
         flake_query = {"flake_id": flake_id}
         flake_dict = get_flakes(db, flake_query)[0]
@@ -176,7 +180,6 @@ def FLAKE_DOWNLOAD():
                 file_path = os.path.join(flake_dir, file_name)
 
                 if file_name in SCALEBAR_IMAGE_NAMES and scalebar_download is not None:
-                    print("trying Scalebar download")
                     try:
                         # create the scalebar image and add it to the zip, remove it afterwards
                         scale_bar_path = add_scalebar(file_path)
@@ -246,4 +249,8 @@ if __name__ == "__main__":
     # Upload_scan_directory_to_db(
     #     db, r"C:\Users\Uslu.INSTITUT2B\Desktop\Mikroskop_Bilder\graphene_taoufiq"
     # )
-    app.run(debug=True, host="0.0.0.0")
+    app.run(
+        debug=True,
+        host="0.0.0.0",
+        port=5000,
+    )
